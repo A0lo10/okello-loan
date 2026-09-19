@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Okello Emergency Quick Loans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://script.google.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EAEFEC; --surface:#FFFFFF; --soft:#F4F7F6; --ink:#152A2E; --muted:#5B6E72; --line:#D6DFDD;
+  --brand:#0E4F52; --brand-deep:#0A3B3D; --brand-tint:#D3E7E5;
+  --amber:#F2AE1C; --amber-deep:#D89400; --amber-ink:#3A2900; --amber-tint:#FCEBC0;
+  --good:#1E8A5A; --bad:#C43B30; --bad-tint:#F6D3CF; --info:#2E6DB0;
+  --cash:#B27A12; --mpesa:#2C9A55; --bank:#2E6DB0;
+  --font:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 var(--font);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.01em;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}
+.side{background:var(--brand-deep);color:#D3E4E2;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:22px 14px}
+.brand{display:flex;flex-direction:column;gap:10px;padding:0 8px 22px}
+.brand-mark{display:grid;grid-template-columns:repeat(13,1fr);gap:2px;width:118px}
+.brand-mark i{height:14px;border-radius:2px;background:#2D6A6C}
+.brand-mark i:nth-child(-n+8){background:#7CC3BE}
+.brand-mark i:nth-child(9){background:var(--amber)}
+.brand b{font:700 19px/1.1 var(--display);color:#fff}
+.brand span{font-size:13px;color:#9CC1BE}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;text-decoration:none;color:#D3E4E2;padding:10px 12px;border-radius:8px;font-weight:500}
+.nav a:hover{background:rgba(255,255,255,.07)}
+.nav a.on{background:#fff;color:var(--brand-deep);font-weight:600}
+.nav .badge{background:var(--bad);color:#fff;border-radius:99px;font-size:12px;font-weight:700;padding:1px 8px}
+.side-foot{margin-top:auto;padding:12px 10px 0;font-size:13px;color:#9CC1BE;border-top:1px solid rgba(255,255,255,.12)}
+.side-foot a{color:#fff}
+main{padding:26px 30px 60px;min-width:0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.top h1{font-size:30px}
+.top p{margin:4px 0 0;color:var(--muted)}
+.top .tools{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- controls ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 15px;border-radius:8px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:#B7C5C2;background:var(--soft)}
+.btn.amber{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.btn.amber:hover{background:var(--amber-deep);border-color:var(--amber-deep)}
+.btn.teal{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.teal:hover{background:var(--brand-deep)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--soft);border-color:var(--line)}
+.btn.danger{color:var(--bad)}
+.btn.danger.solid{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.sm{padding:6px 11px;font-size:13.5px;border-radius:7px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+input[type=text],input[type=search],input[type=tel],input[type=number],input[type=date],select,textarea{width:100%;padding:9px 11px;border:1px solid #BFCBC9;border-radius:8px;background:#fff}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--amber);outline-offset:0;border-color:var(--amber-deep)}
+input[readonly]{background:var(--soft);color:var(--muted)}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld label,.lbl{font-weight:600;font-size:13.5px}
+.fld .hint{font-size:12.5px;color:var(--muted)}
+.fld.bad input,.fld.bad select{border-color:var(--bad);background:#FFF8F7}
+.err{color:var(--bad);font-size:12.5px;font-weight:600;min-height:0}
+.err:empty{display:none}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--brand);flex:none}
+.check.bad{color:var(--bad)}
+
+/* ---------- panels ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.panel h2{font-size:18px;margin-bottom:12px}
+.panel h2 small{font:400 13.5px var(--font);color:var(--muted);margin-left:8px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.grid2.even{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.empty{text-align:center;padding:38px 18px;color:var(--muted)}
+.empty h3{color:var(--ink);font-size:20px;margin-bottom:6px}
+.empty .btn{margin:14px 4px 0}
+
+/* today */
+.today{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:0;padding:0;overflow:hidden}
+.today-l{background:var(--brand);color:#fff;padding:22px 24px}
+.today-l h2{font-size:26px;color:#fff;margin-bottom:2px}
+.today-l .sub{color:#A9D0CD;font-size:14px}
+.today-l .big{font:700 34px/1.1 var(--display);margin:18px 0 4px}
+.today-l .of{color:#CFE5E3}
+.meter{height:12px;background:#0A3B3D;border-radius:99px;overflow:hidden;margin:14px 0 8px}
+.meter i{display:block;height:100%;background:var(--amber);border-radius:99px;min-width:0}
+.today-l .foot{font-size:14px;color:#CFE5E3}
+.today-r{padding:16px 20px;max-height:400px;overflow:auto}
+.today-r h3{font-size:16px;margin-bottom:8px}
+.rowline{display:grid;grid-template-columns:minmax(0,1.2fr) 118px 150px auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.rowline:first-of-type{border-top:0}
+.rowline b{display:block}
+.rowline small{color:var(--muted)}
+.rowline.two{grid-template-columns:minmax(0,1fr) auto}
+.rowline .amt{text-align:right;font-weight:700}
+.rowline .amt small{display:block;font-weight:400}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:0;margin-top:16px;overflow:hidden}
+.stat{padding:16px 18px;border-left:1px solid var(--line);border-top:1px solid var(--line);margin:-1px 0 0 -1px}
+.stat span{display:block;color:var(--muted);font-size:13.5px}
+.stat b{display:block;font:700 22px/1.25 var(--display);margin-top:2px}
+.stat small{color:var(--muted);font-size:12.5px}
+.stat.warn b{color:var(--bad)}
+
+/* charts */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg.chart{width:100%;height:auto;display:block}
+svg.chart text{font:12px var(--font);fill:var(--muted)}
+.modebar{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--soft);margin:6px 0 12px}
+.modebar i{display:block;height:100%}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+.kv:first-of-type{border-top:0}
+.kv span:first-child{display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* ---------- pills / chips ---------- */
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.pill.active{background:var(--brand-tint);color:var(--brand-deep)}
+.pill.behind{background:var(--amber-tint);color:#6B4700}
+.pill.defaulted{background:var(--bad-tint);color:#8A1F17}
+.pill.completed{background:#DDEFE5;color:#14663F}
+.pill.upcoming{background:#E4E9E8;color:var(--muted)}
+.pill.paid{background:#DDEFE5;color:#14663F}
+.pill.partial{background:var(--brand-tint);color:var(--brand-deep)}
+.pill.short,.pill.missed{background:var(--bad-tint);color:#8A1F17}
+.pill.due{background:var(--amber-tint);color:#6B4700}
+.mode{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.mode i{width:9px;height:9px;border-radius:50%}
+.mode.cash i{background:var(--cash)}.mode.mpesa i{background:var(--mpesa)}.mode.bank i{background:var(--bank)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 16px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 13px;font-weight:600;font-size:13.5px;cursor:pointer}
+.chip b{color:var(--muted);font-weight:600;margin-left:4px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.on b{color:#B9CBC9}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap}
+.toolbar input[type=search]{flex:1 1 280px;max-width:520px}
+.toolbar .fld{flex:0 0 auto}
+
+/* ---------- 13-day strip: one cell per repayment day ---------- */
+.strip{display:grid;grid-template-columns:repeat(13,1fr);gap:2px;min-width:104px}
+.c{height:16px;border-radius:2px;--p:0%;--fill:var(--brand);--empty:#E1E7E6;background:linear-gradient(to top,var(--fill) var(--p),var(--empty) var(--p))}
+.c.paid{--p:100%}
+.c.partial{--empty:#C9DFDD}
+.c.short{--empty:#F1BFB9}
+.c.missed{--empty:#F1BFB9;box-shadow:inset 0 0 0 1px #E19A92}
+.c.due{--empty:var(--amber-tint);box-shadow:inset 0 0 0 1.5px var(--amber-deep)}
+.c.now{outline:2px solid var(--ink);outline-offset:1px}
+.strip.big .c{height:22px}
+
+/* ---------- member list ---------- */
+.mem{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.mem.open{border-color:#93B5B2}
+.mem-head{display:grid;grid-template-columns:minmax(190px,1.35fr) 104px minmax(150px,1fr) 100px 112px auto;gap:14px;align-items:center;padding:12px 14px;cursor:pointer;border-radius:12px}
+.mem-head:hover{background:#FAFCFB}
+.mem-toggle{all:unset;display:flex;align-items:center;gap:12px;cursor:pointer;min-width:0}
+.mem-toggle:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
+.chev{width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none;margin:0 3px}
+.mem.open .chev{transform:rotate(45deg)}
+.who{display:flex;flex-direction:column;min-width:0}
+.who b{font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who span{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fig b,.bal b{display:block;font-size:15px}
+.fig span,.bal span,.prog span{display:block;color:var(--muted);font-size:12.5px}
+.prog .strip{margin-bottom:4px}
+.acts{display:flex;gap:6px;align-items:center;justify-content:flex-end}
+.menu{position:relative}
+.menu>summary{list-style:none;cursor:pointer}
+.menu>summary::-webkit-details-marker{display:none}
+.menu-list{position:absolute;right:0;top:calc(100% + 4px);z-index:20;background:#fff;border:1px solid var(--line);border-radius:10px;min-width:190px;padding:5px;box-shadow:0 10px 28px rgba(10,59,61,.18)}
+.menu-list button{all:unset;display:block;width:100%;padding:9px 11px;border-radius:7px;cursor:pointer;box-sizing:border-box;font-weight:500}
+.menu-list button:hover,.menu-list button:focus-visible{background:var(--soft)}
+.menu-list button.danger{color:var(--bad)}
+
+.mem-body{border-top:1px solid var(--line);padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;cursor:default}
+.mem-body h3{font-size:16px;margin-bottom:8px}
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:13px;background:var(--soft)}
+td.num,th.num{text-align:right}
+tfoot td{font-weight:700;background:var(--soft)}
+tr.is-today td{background:var(--amber-tint)}
+tr.d-upcoming td{color:#7A8B8E}
+.days td:first-child{font-weight:700}
+.side-col{display:flex;flex-direction:column;gap:16px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:14px;margin:0}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;text-align:right;overflow-wrap:anywhere}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.hist{list-style:none;margin:0;padding:0;font-size:14px}
+.hist li{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+.hist small{color:var(--muted);display:block}
+.x-btn{border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;font-weight:600}
+.x-btn:hover{background:var(--bad-tint);color:var(--bad)}
+.ok-tag{color:var(--good);font-weight:700;font-size:13px}
+
+/* ---------- dialog ---------- */
+dialog{border:0;padding:0;border-radius:14px;max-width:calc(100vw - 20px);width:640px;background:var(--surface);color:var(--ink);box-shadow:0 24px 60px rgba(10,30,32,.35)}
+dialog.narrow{width:470px}
+dialog::backdrop{background:rgba(10,40,42,.55)}
+.dlg{padding:0;max-height:min(90vh,900px);overflow:auto}
+.dlg>header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.dlg>header h2{font-size:21px}
+.dlg .x{border:0;background:transparent;font-size:26px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 8px;border-radius:6px}
+.dlg .x:hover{background:var(--soft)}
+.dlg .body{padding:18px 22px;display:flex;flex-direction:column;gap:16px}
+.dlg>footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--surface)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font:700 16px var(--display);padding:0;margin-bottom:10px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.cols .full{grid-column:1/-1}
+.summary4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--brand-tint);border-radius:10px;padding:12px}
+.summary4 span{display:block;font-size:12.5px;color:#2E5B5D}
+.summary4 b{font-size:15px}
+.segs{display:flex;gap:8px;flex-wrap:wrap}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg span{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1.5px solid #BFCBC9;border-radius:8px;font-weight:600;cursor:pointer;background:#fff}
+.seg input:checked+span{border-color:var(--brand);background:var(--brand-tint);color:var(--brand-deep)}
+.seg input:focus-visible+span{outline:3px solid var(--amber);outline-offset:2px}
+.qchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.qchips button{border:1px dashed #9DB1AF;background:var(--soft);border-radius:99px;padding:4px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.qchips button:hover{background:var(--amber-tint);border-color:var(--amber-deep)}
+.mini-card{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.preview{background:var(--amber-tint);border-radius:8px;padding:9px 12px;font-size:14px}
+.preview:empty{display:none}
+details.terms{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--soft)}
+details.terms summary{cursor:pointer;font-weight:600}
+details.terms ol{margin:10px 0 0;padding-left:20px;font-size:13.5px}
+details.terms li{margin-bottom:6px}
+.pick-list{display:flex;flex-direction:column;max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.pick-list button{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid var(--line);cursor:pointer}
+.pick-list button:first-child{border-top:0}
+.pick-list button:hover,.pick-list button:focus-visible{background:var(--amber-tint)}
+
+/* toasts */
+.toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:100;width:min(440px,calc(100vw - 24px))}
+.toast{background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;display:flex;justify-content:space-between;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.toast button{background:transparent;border:1px solid #6E8785;color:#fff;border-radius:7px;padding:4px 10px;font-weight:600;cursor:pointer}
+
+/* settings */
+.kvbig{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kvbig div{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kvbig span{display:block;color:var(--muted);font-size:13px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+code,pre{font:13px ui-monospace,Menlo,Consolas,monospace;background:var(--soft);border-radius:6px}
+pre{padding:10px 12px;overflow:auto;white-space:pre-wrap;margin:8px 0}
+
+/* print */
+#printArea{display:none}
+@media print{
+  body{background:#fff}
+  .app,dialog,.toasts{display:none!important}
+  #printArea{display:block;color:#000;font:13px/1.5 Georgia,"Times New Roman",serif}
+  #printArea h1{font:700 22px var(--display);text-align:center;margin:0}
+  #printArea h2{font:700 16px var(--display);margin:16px 0 6px}
+  #printArea .sub{text-align:center;margin:2px 0 14px}
+  #printArea .fill{display:inline-block;min-width:110px;border-bottom:1px solid #000;padding:0 6px;font-weight:700}
+  #printArea .lines{display:flex;gap:30px;margin-top:28px}
+  #printArea .lines div{flex:1;border-top:1px solid #000;padding-top:4px;font-size:12px}
+  #printArea ol{padding-left:18px}
+  #printArea .rc{width:320px;margin:0 auto;border:1px dashed #000;padding:14px}
+  #printArea .rc table td{border:0;padding:3px 0;font-size:13px}
+  #printArea .rc table td:last-child{text-align:right;font-weight:700}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .mem-head{grid-template-columns:minmax(0,1fr) 100px 108px auto;grid-template-areas:"who fig bal acts" "prog prog pill pill"}
+  .mem-head .mem-toggle{grid-area:who}.mem-head .fig{grid-area:fig}.mem-head .bal{grid-area:bal}.mem-head .acts{grid-area:acts}
+  .mem-head .prog{grid-area:prog}.mem-head .pillcell{grid-area:pill;justify-self:end}
+  .mem-body,.grid2,.grid2.even,.today{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;flex-direction:row;padding:6px 8px;z-index:30;border-top:1px solid rgba(255,255,255,.15)}
+  .brand,.side-foot{display:none}
+  .nav{flex-direction:row;width:100%;justify-content:space-around}
+  .nav a{flex:1;justify-content:center;padding:10px 6px;font-size:14px}
+  main{padding:18px 14px 90px}
+  .top h1{font-size:25px}
+  .toasts{bottom:78px}
+  .cols{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .summary4{grid-template-columns:repeat(2,1fr)}
+  .rowline{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"who amt" "strip pay"}
+  .rowline.two{grid-template-areas:none}.rowline.two>*{grid-area:auto!important}
+  .rowline>:nth-child(1){grid-area:who}.rowline>:nth-child(2){grid-area:strip}.rowline>:nth-child(3){grid-area:amt}.rowline>:nth-child(4){grid-area:pay;justify-self:end}
+}
+@media (max-width:520px){
+  .mem-head{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"who acts" "fig bal" "prog prog" "pill pill"}
+  .mem-head .pillcell{justify-self:start}
+  .fig,.bal{display:flex;gap:8px;align-items:baseline}
+  .bal{justify-content:flex-end}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- login ---------- */
+#loginScreen{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:
+    radial-gradient(900px 520px at 12% -12%, rgba(14,79,82,.20) 0%, transparent 60%),
+    radial-gradient(760px 440px at 104% 112%, rgba(242,174,28,.16) 0%, transparent 55%),
+    var(--paper)}
+body.authed #loginScreen{display:none}
+body:not(.authed) .app{display:none}
+.login-card{width:100%;max-width:384px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:38px 32px 30px;text-align:center;box-shadow:0 28px 64px -24px rgba(10,59,61,.4)}
+.login-logo{display:flex;justify-content:center;margin-bottom:16px}
+.login-card h1{font-size:22px;line-height:1.25;margin-bottom:6px}
+.login-tag{color:var(--muted);font-size:13.5px;margin:0 0 26px;line-height:1.5}
+.login-card form{text-align:left}
+.login-foot{margin:22px 0 0;color:var(--muted);font-size:12px}
+.msg{font-size:13.5px;margin:8px 0;min-height:1em}
+.msg-good{color:var(--good);font-weight:600}
+.msg-bad{color:var(--bad);font-weight:600}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 140 140" width="108" height="108" aria-hidden="true">
+        <circle cx="70" cy="70" r="68" fill="var(--brand-deep)"></circle>
+        <circle cx="70" cy="70" r="68" fill="none" stroke="var(--brand)" stroke-width="2"></circle>
+        <g>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(0 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(27.7 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(55.4 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(83.1 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(110.8 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(138.5 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(166.2 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#7CC3BE" transform="rotate(193.8 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="var(--amber)" transform="rotate(221.5 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#2D6A6C" transform="rotate(249.2 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#2D6A6C" transform="rotate(276.9 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#2D6A6C" transform="rotate(304.6 70 70)"></rect>
+          <rect x="68" y="6" width="4" height="14" rx="2" fill="#2D6A6C" transform="rotate(332.3 70 70)"></rect>
+        </g>
+        <polygon points="72.7,43.0 45.7,75.4 70.0,75.4 67.3,97.0 94.3,64.6 70.0,64.6" fill="var(--amber)"></polygon>
+      </svg>
+    </div>
+    <h1>Okello<br>Emergency Quick Loans</h1>
+    <p class="login-tag">Fast cash when it can't wait — 13 days, fair terms.</p>
+    <form id="loginForm" data-form="login" novalidate>
+      <div class="fld"><label for="loginUser">Username</label><input id="loginUser" name="username" type="text" autocomplete="username" placeholder="Username"></div>
+      <div class="fld" style="margin-top:12px"><label for="loginPass">Password</label><input id="loginPass" name="password" type="password" autocomplete="current-password" placeholder="Password"></div>
+      <div class="err" id="loginErr" style="margin-top:10px"></div>
+      <button type="submit" class="btn amber" id="loginBtn" style="width:100%;justify-content:center;margin-top:14px">Log in</button>
+    </form>
+    <p class="login-foot">Okello's Emergency Quick Loans &middot; staff access only</p>
+  </div>
+</div>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div><b>Okello's</b><br><span>Emergency Quick Loans</span></div>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#dashboard" data-view="dashboard">Dashboard</a>
+      <a href="#members" data-view="members">Members <span class="badge" id="navBadge" hidden></span></a>
+      <a href="#payments" data-view="payments">Payments</a>
+      <a href="#settings" data-view="settings">Settings</a>
+    </nav>
+    <div class="side-foot" id="sideFoot"></div>
+  </aside>
+  <main>
+    <header class="top">
+      <div><h1 id="pageTitle">Dashboard</h1><p id="pageSub"></p></div>
+      <div class="tools">
+        <button class="btn teal" data-action="pick">Record payment</button>
+        <button class="btn amber" data-action="add">New loan</button>
+      </div>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+<dialog id="modal"></dialog>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="printArea"></div>
+
+<script>
+/* =====================================================================
+   OKELLO'S EMERGENCY QUICK LOANS  -  front end
+   ---------------------------------------------------------------------
+   Data lives in this browser (localStorage) until you connect Google
+   Sheets. To connect: deploy your Apps Script web app and paste its URL
+   into CONFIG.API_URL. See the Backend object and the Settings page for
+   the sheet columns this app expects.
+   ===================================================================== */
+const CONFIG = {
+  BUSINESS: "Okello's Emergency Quick Loans",
+  INTEREST_RATE: 0.30,      // clause 3: 30% of principal
+  DAYS: 13,                 // clause 2: repay within 13 days
+  MIN_AGE: 18,              // clause 1
+  MIN_LOAN: 500,            // your own limits, set MAX_LOAN to 0 for no maximum
+  MAX_LOAN: 0,
+  DAY1_OFFSET_DAYS: 0,      // 0 = Day 1 is the start date. Use 1 if the first payment is the day after disbursement
+  API_URL: "https://script.google.com/macros/s/AKfycbxmZ8KvSgYR8o9jPeTvibVhEiTkq5KPFGlhLZ5wq1kFXZ4G8Bzt0LrIh6hCFzbeVxyp/exec",              // Google Apps Script web app URL (leave empty for offline mode)
+  STORAGE_KEY: "okello_quick_loans_v1"
+};
+
+const SESSION_KEY = "okello_admin_session";
+let adminUser = null;
+let adminKey = null;
+
+const TERMS = [
+  ["Eligibility Requirements", "Applicants must be at least 18 years of age and are required to present a valid National Identification Card on the application day."],
+  ["Loan Duration", "Okello\u2019s Emergency Quick Loans are short-term loans, to be repaid in installment of at least 10% daily within a period of 13 days from the disbursement date."],
+  ["Interest Rate and Repayment", "Loans disbursed are subject to an interest charge of 30% of the principal amount. The total loan amount, including interest, must be repaid within 13 days."],
+  ["Guarantor Requirements", "A guarantor for the loan application must be a person whose identity is verified by the server and who is available for reference at any time during the loan period."],
+  ["Consequences of Non-Repayment", "Failure to repay the loan within the stipulated period may result in legal action being taken against both the borrower and the guarantor."],
+  ["Acknowledgment of Terms", "All applicants must thoroughly read and understand these terms and conditions prior to submitting an application for a loan."]
+];
+const OCCUPATIONS = ["Driver", "Owner of the vehicle", "Green grocery", "Hotel", "Others"];
+const MODES = { cash: "Cash", mpesa: "M-Pesa", bank: "Bank" };
+
+/* ---------------------------- utilities ---------------------------- */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const num = n => r2(n).toLocaleString("en-KE", { maximumFractionDigits: 2 });
+const money = n => "KSh " + num(n);
+const pad = (n, l = 2) => String(n).padStart(l, "0");
+const fmtISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const today = () => fmtISO(new Date());
+const addDays = (s, n) => { const d = parseISO(s); d.setDate(d.getDate() + n); return fmtISO(d); };
+const diffDays = (a, b) => Math.round((parseISO(a) - parseISO(b)) / 864e5);
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const fmtDate = s => { if (!s) return "\u2013"; const d = parseISO(s); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; };
+const fmtShort = s => { const d = parseISO(s); return `${DOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const ageOn = (dob, ref) => { const d = parseISO(dob), r = parseISO(ref); let a = r.getFullYear() - d.getFullYear(); if (((r.getMonth() - d.getMonth()) || (r.getDate() - d.getDate())) < 0) a--; return a; };
+const normPhone = s => { let d = String(s || "").replace(/\D/g, ""); if (d.startsWith("254")) d = "0" + d.slice(3); else if (/^[17]\d{8}$/.test(d)) d = "0" + d; return /^0[17]\d{8}$/.test(d) ? d : null; };
+const showPhone = p => p && p.length === 10 ? `${p.slice(0, 4)} ${p.slice(4, 7)} ${p.slice(7)}` : (p || "");
+const tel = p => `tel:+254${String(p).slice(1)}`;
+const byId = id => Store.data.members.find(m => m.id === id);
+const occLabel = m => m.occupation === "Others" && m.occupationOther ? m.occupationOther : m.occupation;
+
+/* ------------------------------ store ------------------------------ */
+const Store = {
+  data: { members: [], counters: { member: 0, receipt: 0 }, settings: { staff: "", lastMode: "cash" } },
+  load() {
+    try { const raw = localStorage.getItem(CONFIG.STORAGE_KEY); if (raw) this.data = Object.assign(this.data, JSON.parse(raw)); } catch (e) { console.warn(e); }
+    this.data.counters = Object.assign({ member: 0, receipt: 0 }, this.data.counters);
+    this.data.settings = Object.assign({ staff: "", lastMode: "cash" }, this.data.settings);
+    if (!Array.isArray(this.data.members)) this.data.members = [];
+  },
+  save() {
+    try { localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(this.data)); return true; }
+    catch (e) { toast("This browser is blocking storage, so changes will be lost on refresh."); return false; }
+  }
+};
+
+/* Google Sheets bridge. Off until CONFIG.API_URL is set.
+   Suggested Apps Script contract:
+     GET  ?action=getAll               -> { members:[...] }
+     POST {action, payload} as text/plain (avoids CORS preflight)
+     actions: member.save, member.delete, loan.renew, payment.add, payment.delete */
+async function apiPost(payload) {
+  const res = await fetch(CONFIG.API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+  const text = await res.text();
+  try { return JSON.parse(text); } catch (e) { throw new Error("Unexpected response from the server."); }
+}
+const Backend = {
+  enabled: () => !!CONFIG.API_URL,
+  async pull() {
+    if (!this.enabled()) return;
+    try {
+      const d = await (await fetch(CONFIG.API_URL + "?action=getAll&key=" + encodeURIComponent(adminKey || ""))).json();
+      if (d && d.error === "unauthorized") { doLogout("Your session expired. Please log in again."); return; }
+      if (d && Array.isArray(d.members)) { Store.data.members = d.members; Store.save(); render(); }
+    } catch (e) { toast("Could not reach the Google Sheet. Showing data saved on this device."); }
+  },
+  async push(action, payload) {
+    if (!this.enabled()) return;
+    try {
+      const d = await apiPost({ action, payload, key: adminKey });
+      if (d && d.error === "unauthorized") { doLogout("Your session expired. Please log in again."); }
+    }
+    catch (e) { toast("Saved on this device, but the Google Sheet was not updated."); }
+  }
+};
+const persist = (action, payload) => { Store.save(); Backend.push(action, payload); };
+
+/* ---------------------------- session/auth --------------------------- */
+function loadSession() {
+  try { const raw = localStorage.getItem(SESSION_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+}
+function saveSession(username, password) {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ username, password })); } catch (e) {}
+}
+function clearSession() {
+  try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+}
+function enterApp(username, password) {
+  adminUser = username; adminKey = password;
+  document.body.classList.add("authed");
+  const err = $("#loginErr"); if (err) err.textContent = "";
+  render_foot(); render(); Backend.pull();
+}
+function doLogout(message) {
+  adminUser = null; adminKey = null;
+  clearSession();
+  document.body.classList.remove("authed");
+  const err = $("#loginErr"); if (err) err.textContent = message || "";
+  const p = $("#loginPass"); if (p) p.value = "";
+  setTimeout(() => { const u = $("#loginUser"); if (u) u.focus(); }, 0);
+}
+async function submitLogin(f) {
+  const btn = $("#loginBtn"), err = $("#loginErr");
+  const username = f.elements.username.value.trim(), password = f.elements.password.value;
+  if (!username || !password) { err.textContent = "Enter your username and password."; return; }
+  btn.disabled = true; btn.textContent = "Checking…"; err.textContent = "";
+  try {
+    if (!Backend.enabled()) { err.textContent = "No backend connected — set CONFIG.API_URL first."; return; }
+    const res = await apiPost({ action: "login", payload: { username, password } });
+    if (res && res.success) { saveSession(username, password); enterApp(username, password); }
+    else { err.textContent = (res && res.error) || "Incorrect username or password."; }
+  } catch (e) { err.textContent = "Couldn't reach the server: " + e.message; }
+  finally { btn.disabled = false; btn.textContent = "Log in"; }
+}
+async function submitChangePassword(f) {
+  const msg = $("#pwMsg"), btn = $("#pwBtn");
+  const oldPassword = f.elements.oldPassword.value, newPassword = f.elements.newPassword.value, newPassword2 = f.elements.newPassword2.value;
+  if (!oldPassword || !newPassword) { msg.className = "msg msg-bad"; msg.textContent = "Fill in all password fields."; return; }
+  if (newPassword !== newPassword2) { msg.className = "msg msg-bad"; msg.textContent = "New passwords don't match."; return; }
+  btn.disabled = true; msg.className = "msg"; msg.textContent = "Saving…";
+  try {
+    const res = await apiPost({ action: "changePassword", payload: { oldPassword, newPassword } });
+    if (res && res.success) { adminKey = newPassword; saveSession(adminUser, adminKey); msg.className = "msg msg-good"; msg.textContent = "Password updated."; f.reset(); }
+    else { msg.className = "msg msg-bad"; msg.textContent = (res && res.error) || "Couldn't update password."; }
+  } catch (e) { msg.className = "msg msg-bad"; msg.textContent = "Couldn't reach the server: " + e.message; }
+  finally { btn.disabled = false; }
+}
+
+/* -------------------------- loan arithmetic ------------------------ */
+function buildLoan(principal, start, cycle, applied, servedBy) {
+  const total = r2(principal * (1 + CONFIG.INTEREST_RATE));
+  return {
+    cycle, principal: r2(principal), rate: CONFIG.INTEREST_RATE, interest: r2(total - principal), total,
+    daily: r2(total / CONFIG.DAYS), start, end: addDays(start, CONFIG.DAY1_OFFSET_DAYS + CONFIG.DAYS - 1), applied, servedBy
+  };
+}
+const loanPayments = (m, cycle = m.loan.cycle) =>
+  m.payments.filter(p => p.cycle === cycle).sort((a, b) => a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+
+/* Payments fill the days in order (Day 1 first), so an overpayment on one
+   day carries forward and a short payment leaves the day part-paid. */
+function buildSchedule(loan, pays) {
+  const days = [];
+  for (let i = 0; i < CONFIG.DAYS; i++) {
+    const due = i < CONFIG.DAYS - 1 ? loan.daily : r2(loan.total - loan.daily * (CONFIG.DAYS - 1));
+    days.push({ n: i + 1, date: addDays(loan.start, CONFIG.DAY1_OFFSET_DAYS + i), due, paid: 0, parts: [] });
+  }
+  let di = 0;
+  for (const p of pays) {
+    let left = p.amount;
+    while (left > 0.004 && di < days.length) {
+      const d = days[di], room = r2(d.due - d.paid);
+      if (room <= 0.004) { di++; continue; }
+      const take = Math.min(room, left);
+      d.paid = r2(d.paid + take); d.parts.push({ pay: p, amount: r2(take) }); left = r2(left - take);
+    }
+  }
+  return days;
+}
+function dayStatus(d, t) {
+  const rem = r2(d.due - d.paid);
+  if (rem <= 0.004) return "paid";
+  if (d.date < t) return d.paid > 0 ? "short" : "missed";
+  if (d.date === t) return d.paid > 0 ? "partial" : "due";
+  return d.paid > 0 ? "partial" : "upcoming";
+}
+function summary(m, t = today()) {
+  const L = m.loan, pays = loanPayments(m), days = buildSchedule(L, pays);
+  days.forEach(d => { d.rem = Math.max(0, r2(d.due - d.paid)); d.status = dayStatus(d, t); });
+  const paid = r2(pays.reduce((s, p) => s + p.amount, 0));
+  const balance = Math.max(0, r2(L.total - paid));
+  const expBefore = r2(days.filter(d => d.date < t).reduce((s, d) => s + d.due, 0));
+  const expThrough = r2(days.filter(d => d.date <= t).reduce((s, d) => s + d.due, 0));
+  const arrears = Math.max(0, r2(expBefore - paid));
+  const dueNow = Math.min(balance, Math.max(0, r2(expThrough - paid)));
+  let status = "active";
+  if (balance <= 0.004) status = "completed";
+  else if (t < days[0].date) status = "upcoming";
+  else if (t > L.end) status = "defaulted";
+  else if (arrears > 0.004) status = "behind";
+  const late = days.filter(d => d.date < t && d.rem > 0.004).length;
+  const dayNo = t < days[0].date ? 0 : Math.min(CONFIG.DAYS, diffDays(t, days[0].date) + 1);
+  return {
+    m, L, pays, days, paid, balance, arrears, dueNow, expThrough, status, late, dayNo,
+    nextDay: days.find(d => d.rem > 0.004), pct: L.total ? paid / L.total : 0,
+    paidToday: r2(pays.filter(p => p.date === t).reduce((s, p) => s + p.amount, 0))
+  };
+}
+function allocationPreview(s, amount) {
+  let left = amount; const out = [];
+  for (const d of s.days) {
+    if (left <= 0.004) break; if (d.rem <= 0.004) continue;
+    const take = Math.min(d.rem, left); out.push({ n: d.n, full: take >= d.rem - 0.004, take }); left = r2(left - take);
+  }
+  return out;
+}
+const suggestAmount = s => r2(Math.min(s.balance, s.dueNow > 0.004 ? s.dueNow : (s.nextDay ? s.nextDay.rem : s.balance)));
+
+/* ---------------------------- portfolio ---------------------------- */
+function portfolio() {
+  const t = today(), rows = Store.data.members.map(m => summary(m, t));
+  const pays = Store.data.members.flatMap(m => m.payments.map(p => ({ ...p, member: m })));
+  const loans = Store.data.members.flatMap(m => [m.loan, ...(m.pastLoans || [])]);
+  const running = rows.filter(s => s.status !== "completed" && s.status !== "upcoming");
+  const inPeriod = rows.filter(s => s.status === "active" || s.status === "behind");
+  const P = { t, rows, pays };
+  P.collectedToday = r2(pays.filter(p => p.date === t).reduce((s, p) => s + p.amount, 0));
+  P.dueToday = r2(inPeriod.reduce((s, r) => s + r.dueNow, 0));
+  P.target = r2(P.collectedToday + P.dueToday);
+  P.toPay = inPeriod.filter(r => r.dueNow > 0.004);
+  P.outstanding = r2(rows.filter(s => s.status !== "completed").reduce((s, r) => s + r.balance, 0));
+  P.overdue = r2(rows.reduce((s, r) => s + r.arrears, 0));
+  P.behind = rows.filter(r => r.status === "behind" || r.status === "defaulted").sort((a, b) => b.arrears - a.arrears);
+  P.activeCount = rows.filter(r => r.status === "active" || r.status === "behind" || r.status === "upcoming").length;
+  P.disbursed = r2(loans.reduce((s, l) => s + l.principal, 0));
+  P.collected = r2(pays.reduce((s, p) => s + p.amount, 0));
+  P.interestBooked = r2(loans.reduce((s, l) => s + l.interest, 0));
+  const exp = rows.reduce((s, r) => s + Math.min(r.expThrough, r.L.total), 0);
+  const got = rows.reduce((s, r) => s + Math.min(r.paid, r.expThrough), 0);
+  P.health = exp > 0 ? got / exp : null;
+  P.running = running;
+  return P;
+}
+function dailySeries(P, n = 14) {
+  const out = [];
+  for (let i = n - 1; i >= 0; i--) out.push({ date: addDays(P.t, -i), exp: 0, got: 0 });
+  const idx = Object.fromEntries(out.map((o, i) => [o.date, i]));
+  P.pays.forEach(p => { if (p.date in idx) out[idx[p.date]].got += p.amount; });
+  Store.data.members.forEach(m => [m.loan, ...(m.pastLoans || [])].forEach(L => {
+    const days = buildSchedule(L, []);
+    days.forEach(d => { if (d.date in idx) out[idx[d.date]].exp += d.due; });
+  }));
+  return out;
+}
+
+/* ------------------------------- UI bits ---------------------------- */
+const dlg = $("#modal");
+function openModal(html, cls = "") { dlg.className = cls; dlg.innerHTML = html; if (!dlg.open) dlg.showModal(); }
+function closeModal() { if (dlg.open) dlg.close(); }
+dlg.addEventListener("click", e => { if (e.target === dlg) closeModal(); });
+
+function toast(msg, action) {
+  const el = document.createElement("div"); el.className = "toast";
+  el.innerHTML = `<span>${esc(msg)}</span>${action ? `<button type="button">${esc(action.label)}</button>` : ""}`;
+  if (action) $("button", el).onclick = () => { action.run(); el.remove(); };
+  $("#toasts").appendChild(el); setTimeout(() => el.remove(), action ? 8000 : 4200);
+}
+
+function strip(s, big) {
+  const t = today();
+  const label = `Repayment progress: ${s.days.filter(d => d.status === "paid").length} of ${CONFIG.DAYS} days paid`;
+  return `<div class="strip ${big ? "big" : ""}" role="img" aria-label="${label}">${s.days.map(d => {
+    const p = d.status === "paid" ? 100 : d.status === "partial" || d.status === "short" ? Math.round(d.paid / d.due * 100) : 0;
+    return `<i class="c ${d.status}${d.date === t ? " now" : ""}" style="--p:${p}%" title="Day ${d.n}, ${fmtShort(d.date)}: ${d.status === "paid" ? "paid" : d.status}"></i>`;
+  }).join("")}</div>`;
+}
+function pill(s) {
+  const label = { active: "On track", behind: "Behind", defaulted: "Past end date", completed: "Cleared", upcoming: "Starts " + fmtShort(s.L.start).slice(4) }[s.status];
+  return `<span class="pill ${s.status}">${label}</span>`;
+}
+const DAYLBL = { paid: "Paid", partial: "Part paid", short: "Short", missed: "Missed", due: "Due today", upcoming: "Upcoming" };
+const modeTag = m => `<span class="mode ${m}"><i></i>${MODES[m] || m}</span>`;
+const progText = s => s.status === "upcoming" ? "Not started" : s.status === "completed" ? "All 13 days paid" : `Day ${s.dayNo} of ${CONFIG.DAYS}, paid ${money(s.paid)}`;
+const emptyBox = (title, text, btns = "") => `<div class="panel empty"><h3>${title}</h3><p>${text}</p>${btns}</div>`;
+
+/* -------------------------------- views ----------------------------- */
+const state = { view: "dashboard", open: new Set(), q: "", status: "all", pq: "", pmode: "all", pfrom: "", pto: "" };
+const TITLES = { dashboard: "Dashboard", members: "Members", payments: "Payments", settings: "Settings" };
+
+function dueRow(s) {
+  const m = s.m;
+  return `<div class="rowline">
+    <div><b>${esc(m.name)}</b><small>${esc(m.code)}, ${esc(occLabel(m))}</small></div>
+    ${strip(s)}
+    <div class="amt">${money(s.dueNow)}${s.arrears > 0.004 ? `<small>includes ${money(s.arrears)} arrears</small>` : ""}</div>
+    <button class="btn amber sm" data-action="pay" data-id="${m.id}">Pay</button></div>`;
+}
+
+function viewDashboard() {
+  const P = portfolio();
+  if (!P.rows.length) return emptyBox("No loans yet", "Add your first borrower to start tracking daily repayments, or fill the app with sample data to look around.",
+    `<button class="btn amber" data-action="add">New loan</button><button class="btn" data-action="demo">Load sample data</button>`);
+  const pct = P.target > 0 ? Math.round(P.collectedToday / P.target * 100) : 0;
+  const series = dailySeries(P);
+  const modeSum = { cash: 0, mpesa: 0, bank: 0 }; P.pays.forEach(p => modeSum[p.mode] = (modeSum[p.mode] || 0) + p.amount);
+  const modeTotal = Object.values(modeSum).reduce((a, b) => a + b, 0);
+  const statusCount = {}; P.rows.forEach(r => statusCount[r.status] = (statusCount[r.status] || 0) + 1);
+  const recent = P.pays.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 7);
+  const d = new Date();
+  return `
+  <section class="panel today">
+    <div class="today-l">
+      <h2>${DOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}</h2>
+      <div class="sub">Today's collection</div>
+      <div class="big">${money(P.collectedToday)}</div>
+      <div class="of">${P.target > 0 ? `of ${money(P.target)} expected` : "No payments expected today"}</div>
+      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div>
+      <div class="foot">${P.toPay.length ? `${P.toPay.length} ${P.toPay.length === 1 ? "member has" : "members have"} yet to pay ${money(P.dueToday)}` : "Everyone due has paid."}</div>
+    </div>
+    <div class="today-r">
+      <h3>Still to pay today</h3>
+      ${P.toPay.length ? P.toPay.sort((a, b) => b.dueNow - a.dueNow).map(dueRow).join("") : `<p class="muted">Nothing outstanding for today. New payments will appear here as days roll over.</p>`}
+    </div>
+  </section>
+
+  <section class="panel stats">
+    <div class="stat"><span>Outstanding balance</span><b>${money(P.outstanding)}</b><small>${P.running.length} loans running</small></div>
+    <div class="stat ${P.overdue > 0 ? "warn" : ""}"><span>Overdue</span><b>${money(P.overdue)}</b><small>${P.behind.length} members behind</small></div>
+    <div class="stat"><span>Total members</span><b>${P.rows.length}</b><small>${P.activeCount} with open loans</small></div>
+    <div class="stat"><span>Disbursed, all time</span><b>${money(P.disbursed)}</b><small>principal only</small></div>
+    <div class="stat"><span>Collected, all time</span><b>${money(P.collected)}</b><small>${P.pays.length} payments</small></div>
+    <div class="stat"><span>Interest booked</span><b>${money(P.interestBooked)}</b><small>${Math.round(CONFIG.INTEREST_RATE * 100)}% on every loan</small></div>
+    <div class="stat"><span>Loans cleared</span><b>${statusCountAll(P, "completed")}</b><small>fully repaid</small></div>
+    <div class="stat"><span>Collected on schedule</span><b>${P.health == null ? "\u2013" : Math.round(P.health * 100) + "%"}</b><small>of everything due to date</small></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Collections, last 14 days</h2>
+      <div class="legend"><span><i style="background:#C9DFDD"></i>Expected</span><span><i style="background:var(--brand)"></i>Collected</span></div>
+      ${barChart(series)}
+    </section>
+    <div class="stack">
+      <section class="panel"><h2>How money came in</h2>
+        <div class="modebar" role="img" aria-label="Payment mode split">${Object.keys(MODES).map(k => modeTotal ? `<i style="width:${modeSum[k] / modeTotal * 100}%;background:var(--${k})"></i>` : "").join("")}</div>
+        ${Object.keys(MODES).map(k => `<div class="kv"><span><i class="dot" style="background:var(--${k})"></i>${MODES[k]}</span><b>${money(modeSum[k] || 0)} <small class="muted">${modeTotal ? Math.round((modeSum[k] || 0) / modeTotal * 100) : 0}%</small></b></div>`).join("")}
+      </section>
+      <section class="panel"><h2>Loan status</h2>
+        ${[["active", "On track"], ["behind", "Behind"], ["defaulted", "Past end date"], ["upcoming", "Upcoming"], ["completed", "Cleared"]].map(([k, l]) => `<div class="kv"><span><span class="pill ${k}">${l}</span></span><b>${statusCount[k] || 0}</b></div>`).join("")}
+      </section>
+    </div>
+  </div>
+
+  <div class="grid2 even">
+    <section class="panel"><h2>Needs follow-up</h2>
+      ${P.behind.length ? P.behind.slice(0, 8).map(s => `<div class="rowline two">
+        <div><b>${esc(s.m.name)}</b><small>${s.status === "defaulted" ? "Ended " + fmtDate(s.L.end) : s.late + (s.late === 1 ? " day" : " days") + " behind"}, owes ${money(s.arrears)}</small>
+          <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" href="${tel(s.m.phone)}">Call member</a><a class="btn sm" href="${tel(s.m.guarantor.phone)}">Call guarantor</a></div></div>
+        <button class="btn amber sm" data-action="pay" data-id="${s.m.id}">Pay</button></div>`).join("") : `<p class="muted">Nobody is behind. Good work.</p>`}
+    </section>
+    <section class="panel"><h2>Latest payments</h2>
+      ${recent.length ? `<ul class="hist">${recent.map(p => `<li><span><b>${esc(p.member.name)}</b><small>${fmtDate(p.date)}, ${MODES[p.mode]}${p.ref ? ", " + esc(p.ref) : ""}</small></span><b>${money(p.amount)}</b></li>`).join("")}</ul>` : `<p class="muted">No payments recorded yet.</p>`}
+    </section>
+  </div>`;
+}
+
+const statusCountAll = (P, k) => P.rows.filter(r => r.status === k).length;
+function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+function barChart(series) {
+  const W = 640, H = 210, L = 44, B = 26, T = 8, n = series.length;
+  const max = niceMax(Math.max(1, ...series.map(s => Math.max(s.exp, s.got))));
+  const bw = (W - L) / n, y = v => T + (H - T - B) * (1 - v / max);
+  const k = v => v >= 1000 ? (v / 1000) + "k" : v;
+  let g = "";
+  [0, .5, 1].forEach(f => { const v = max * f; g += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#D6DFDD" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${k(v)}</text>`; });
+  series.forEach((s, i) => {
+    const x = L + i * bw, dd = parseISO(s.date), isT = i === n - 1;
+    g += `<g><title>${fmtShort(s.date)}: collected ${money(s.got)} of ${money(s.exp)} expected</title>
+      <rect x="${x + bw * .12}" y="${y(s.exp)}" width="${bw * .76}" height="${Math.max(0, H - B - y(s.exp))}" rx="3" fill="#C9DFDD"/>
+      <rect x="${x + bw * .27}" y="${y(s.got)}" width="${bw * .46}" height="${Math.max(0, H - B - y(s.got))}" rx="2" fill="#0E4F52"/>
+      <text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle" ${isT ? 'style="font-weight:700;fill:#152A2E"' : ""}>${dd.getDate()}</text></g>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Collected versus expected for the last ${n} days">${g}</svg>`;
+}
+
+/* members */
+function viewMembers() {
+  return `<div class="toolbar"><input id="mSearch" type="search" placeholder="Search name, ID, phone, plate, stall or guarantor" value="${esc(state.q)}" aria-label="Search members"></div>
+  <div class="chips" id="chips"></div><div id="memberList"></div>`;
+}
+const STATUS_ORDER = { defaulted: 0, behind: 1, active: 2, upcoming: 3, completed: 4 };
+function renderMemberList() {
+  const list = $("#memberList"); if (!list) return;
+  const q = state.q.trim().toLowerCase(), all = Store.data.members.map(m => summary(m));
+  const counts = { all: all.length }; all.forEach(s => counts[s.status] = (counts[s.status] || 0) + 1);
+  $("#chips").innerHTML = [["all", "All"], ["active", "On track"], ["behind", "Behind"], ["defaulted", "Past end date"], ["upcoming", "Upcoming"], ["completed", "Cleared"]]
+    .map(([k, l]) => `<button class="chip ${state.status === k ? "on" : ""}" data-action="filter" data-id="${k}">${l}<b>${counts[k] || 0}</b></button>`).join("");
+  let rows = all.filter(s => state.status === "all" || s.status === state.status);
+  if (q) rows = rows.filter(s => [s.m.name, s.m.code, s.m.idNo, s.m.phone, s.m.plate, s.m.stall, s.m.area, s.m.guarantor.name].join(" ").toLowerCase().includes(q));
+  rows.sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.arrears - a.arrears || a.m.name.localeCompare(b.m.name));
+  if (!all.length) list.innerHTML = emptyBox("No members yet", "Every borrower needs a guarantor, so the New loan form asks for both.", `<button class="btn amber" data-action="add">New loan</button><button class="btn" data-action="demo">Load sample data</button>`);
+  else if (!rows.length) list.innerHTML = emptyBox("No match", "Try a different search or pick another status filter.");
+  else list.innerHTML = rows.map(memberCard).join("");
+}
+function memberCard(s) {
+  const m = s.m, L = s.L, open = state.open.has(m.id);
+  return `<article class="mem ${open ? "open" : ""}" id="mem-${m.id}">
+    <div class="mem-head" data-action="toggle" data-id="${m.id}">
+      <button type="button" class="mem-toggle" data-action="toggle" data-id="${m.id}" aria-expanded="${open}" aria-controls="body-${m.id}">
+        <span class="chev" aria-hidden="true"></span>
+        <span class="who"><b>${esc(m.name)}</b><span>${esc(m.code)}, ${esc(occLabel(m))}${m.area ? ", " + esc(m.area) : ""}</span></span>
+      </button>
+      <div class="fig"><b>${money(L.principal)}</b><span>${money(L.daily)} a day</span></div>
+      <div class="prog">${strip(s)}<span>${progText(s)}</span></div>
+      <div class="bal"><b>${money(s.balance)}</b><span>balance</span></div>
+      <div class="pillcell">${pill(s)}</div>
+      <div class="acts">
+        ${s.status === "completed" ? `<button class="btn teal sm" data-action="renew" data-id="${m.id}">Renew</button>` : s.status === "upcoming" ? "" : `<button class="btn amber sm" data-action="pay" data-id="${m.id}">Pay</button>`}
+        <details class="menu"><summary class="btn sm" data-action="noop" aria-label="More actions for ${esc(m.name)}">More</summary>
+          <div class="menu-list">
+            <button data-action="edit" data-id="${m.id}">Update profile</button>
+            <button data-action="agreement" data-id="${m.id}">Print loan agreement</button>
+            <button class="danger" data-action="delete" data-id="${m.id}">Delete member</button>
+          </div></details>
+      </div>
+    </div>
+    ${open ? memberBody(s) : ""}
+  </article>`;
+}
+function memberBody(s) {
+  const m = s.m, L = s.L, g = m.guarantor, t = today();
+  const rows = s.days.map(d => {
+    const modes = [...new Set(d.parts.map(p => p.pay.mode))].map(modeTag).join(" ");
+    const late = d.parts.filter(p => p.pay.date !== d.date).map(p => fmtShort(p.pay.date).slice(4));
+    const canPay = s.nextDay && s.nextDay.n === d.n && s.status !== "upcoming";
+    return `<tr class="d-${d.status}${d.date === t ? " is-today" : ""}"><td>${d.n}</td><td>${fmtShort(d.date)}</td>
+      <td class="num">${num(d.due)}</td><td class="num">${d.paid ? num(d.paid) : "\u2013"}</td><td class="num">${d.rem ? num(d.rem) : "\u2013"}</td>
+      <td${late.length ? ` title="Paid on ${esc([...new Set(late)].join(", "))}"` : ""}>${modes || "\u2013"}</td>
+      <td><span class="pill ${d.status}">${DAYLBL[d.status]}</span></td>
+      <td>${canPay ? `<button class="btn amber sm" data-action="pay" data-id="${m.id}">Pay</button>` : ""}</td></tr>`;
+  }).join("");
+  const past = (m.pastLoans || []);
+  return `<div class="mem-body" id="body-${m.id}">
+    <div>
+      <h3>13-day repayment record</h3>
+      <div class="tscroll"><table class="days"><thead><tr><th>Day</th><th>Date</th><th class="num">Due (KSh)</th><th class="num">Paid</th><th class="num">Left</th><th>Mode</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="2">Total</td><td class="num">${num(L.total)}</td><td class="num">${num(s.paid)}</td><td class="num">${num(s.balance)}</td><td colspan="3"></td></tr></tfoot></table></div>
+      <h3 style="margin-top:18px">Payment history</h3>
+      ${s.pays.length ? `<ul class="hist">${s.pays.slice().reverse().map(p => `<li><span><b>${money(p.amount)}</b> ${modeTag(p.mode)}<small>${fmtDate(p.date)}${p.ref ? ", ref " + esc(p.ref) : ""}, ${esc(p.receipt)}, received by ${esc(p.receivedBy)}${p.note ? ", " + esc(p.note) : ""}</small></span>
+        <span><button class="x-btn" data-action="receipt" data-id="${m.id}" data-pid="${p.id}">Receipt</button><button class="x-btn" data-action="delpay" data-id="${m.id}" data-pid="${p.id}">Delete</button></span></li>`).join("")}</ul>` : `<p class="muted">No payments yet.</p>`}
+    </div>
+    <div class="side-col">
+      <div class="box"><h3>Loan</h3><dl class="dl">
+        <dt>Principal</dt><dd>${money(L.principal)}</dd><dt>Interest (${Math.round(L.rate * 100)}%)</dt><dd>${money(L.interest)}</dd>
+        <dt>To repay</dt><dd><b>${money(L.total)}</b></dd><dt>Daily installment</dt><dd>${money(L.daily)}</dd>
+        <dt>Period</dt><dd>${fmtDate(L.start)} to ${fmtDate(L.end)}</dd><dt>Applied</dt><dd>${fmtDate(L.applied)}</dd><dt>Served by</dt><dd>${esc(L.servedBy)}</dd>
+        ${L.cycle > 1 ? `<dt>Loan number</dt><dd>${L.cycle}</dd>` : ""}</dl></div>
+      <div class="box"><h3>Borrower</h3><dl class="dl">
+        <dt>Phone</dt><dd><a href="${tel(m.phone)}">${showPhone(m.phone)}</a></dd><dt>ID number</dt><dd>${esc(m.idNo)}</dd>
+        <dt>Born</dt><dd>${fmtDate(m.dob)}, age ${ageOn(m.dob, t)}</dd><dt>Occupation</dt><dd>${esc(occLabel(m))}</dd>
+        ${m.plate ? `<dt>Number plate</dt><dd>${esc(m.plate)}</dd>` : ""}${m.stall ? `<dt>Stall</dt><dd>${esc(m.stall)}</dd>` : ""}<dt>Area</dt><dd>${esc(m.area)}</dd></dl></div>
+      <div class="box"><h3>Guarantor</h3><dl class="dl">
+        <dt>Name</dt><dd>${esc(g.name)}</dd><dt>Phone</dt><dd><a href="${tel(g.phone)}">${showPhone(g.phone)}</a></dd><dt>ID number</dt><dd>${esc(g.idNo)}</dd>
+        <dt>Identity</dt><dd>${g.verified ? '<span class="ok-tag">Verified</span>' : "Not verified"}</dd></dl></div>
+      ${past.length ? `<div class="box"><h3>Earlier loans</h3><ul class="hist">${past.map(p => `<li><span>Loan ${p.cycle}<small>${fmtDate(p.start)} to ${fmtDate(p.end)}</small></span><b>${money(p.principal)}</b></li>`).join("")}</ul></div>` : ""}
+    </div></div>`;
+}
+
+/* payments ledger */
+function viewPayments() {
+  return `<div class="toolbar">
+    <input id="pSearch" type="search" placeholder="Search member, code, reference or receipt" value="${esc(state.pq)}" aria-label="Search payments">
+    <div class="fld"><select id="pMode" aria-label="Payment mode"><option value="all">All modes</option>${Object.keys(MODES).map(k => `<option value="${k}" ${state.pmode === k ? "selected" : ""}>${MODES[k]}</option>`).join("")}</select></div>
+    <div class="fld"><input type="date" id="pFrom" value="${state.pfrom}" aria-label="From date"></div>
+    <div class="fld"><input type="date" id="pTo" value="${state.pto}" aria-label="To date"></div>
+    <button class="btn" data-action="clearFilters">Clear</button></div>
+  <div id="ledger" style="margin-top:16px"></div>`;
+}
+function renderLedger() {
+  const el = $("#ledger"); if (!el) return;
+  const q = state.pq.trim().toLowerCase();
+  let rows = Store.data.members.flatMap(m => m.payments.map(p => ({ p, m })));
+  if (state.pmode !== "all") rows = rows.filter(r => r.p.mode === state.pmode);
+  if (state.pfrom) rows = rows.filter(r => r.p.date >= state.pfrom);
+  if (state.pto) rows = rows.filter(r => r.p.date <= state.pto);
+  if (q) rows = rows.filter(r => [r.m.name, r.m.code, r.p.ref, r.p.receipt].join(" ").toLowerCase().includes(q));
+  rows.sort((a, b) => b.p.date.localeCompare(a.p.date) || b.p.createdAt - a.p.createdAt);
+  if (!rows.length) { el.innerHTML = emptyBox("No payments to show", Store.data.members.length ? "Change the filters to see more." : "Payments you record will be listed here.", ""); return; }
+  const tot = rows.reduce((s, r) => s + r.p.amount, 0), by = {}; rows.forEach(r => by[r.p.mode] = (by[r.p.mode] || 0) + r.p.amount);
+  el.innerHTML = `<div class="panel"><div class="kvbig" style="margin-bottom:14px"><div><span>Payments shown</span><b>${rows.length}</b></div><div><span>Total</span><b>${money(tot)}</b></div>
+    ${Object.keys(MODES).map(k => `<div><span>${MODES[k]}</span><b>${money(by[k] || 0)}</b></div>`).join("")}</div>
+    <div class="tscroll"><table><thead><tr><th>Date</th><th>Receipt</th><th>Member</th><th class="num">Amount (KSh)</th><th>Mode</th><th>Reference</th><th>Received by</th><th></th></tr></thead><tbody>
+    ${rows.map(({ p, m }) => `<tr><td>${fmtDate(p.date)}</td><td>${esc(p.receipt)}</td><td><b>${esc(m.name)}</b> <small class="muted">${esc(m.code)}${p.cycle > 1 ? ", loan " + p.cycle : ""}</small></td><td class="num">${num(p.amount)}</td><td>${modeTag(p.mode)}</td><td>${esc(p.ref || "\u2013")}</td><td>${esc(p.receivedBy)}</td>
+    <td><button class="x-btn" data-action="receipt" data-id="${m.id}" data-pid="${p.id}">Receipt</button><button class="x-btn" data-action="delpay" data-id="${m.id}" data-pid="${p.id}">Delete</button></td></tr>`).join("")}</tbody></table></div></div>`;
+}
+
+/* settings */
+function viewSettings() {
+  const S = Store.data.settings;
+  return `<div class="stack">
+  <section class="panel"><h2>Your name</h2>
+    <p class="muted" style="margin-top:0">Filled in automatically as "Served by" on new loans and "Received by" on payments.</p>
+    <div class="fld" style="max-width:340px"><label for="staffName">Staff name</label><input type="text" id="staffName" value="${esc(S.staff)}" placeholder="e.g. Okello"></div></section>
+  <section class="panel"><h2>Loan terms in use</h2>
+    <div class="kvbig"><div><span>Repayment period</span><b>${CONFIG.DAYS} days</b></div><div><span>Interest</span><b>${Math.round(CONFIG.INTEREST_RATE * 100)}% of principal</b></div>
+    <div><span>Daily installment</span><b>${(100 * (1 + CONFIG.INTEREST_RATE) / CONFIG.DAYS).toFixed(0)}% of principal</b></div><div><span>Minimum age</span><b>${CONFIG.MIN_AGE} years</b></div>
+    <div><span>Minimum loan</span><b>${money(CONFIG.MIN_LOAN)}</b></div></div>
+    <p class="muted" style="margin-bottom:0">Terms and conditions were created by the Okello's.</p></section>
+  <section class="panel"><h2>Backup and export</h2>
+    <div class="btnrow"><button class="btn" data-action="exportMembers">Members CSV</button><button class="btn" data-action="exportPayments">Payments CSV</button><button class="btn" data-action="exportJson">Full backup (JSON)</button>
+    <label class="btn" style="cursor:pointer">Restore backup<input type="file" id="restoreFile" accept="application/json,.json" class="sr"></label></div></section>
+  <section class="panel"><h2>Account</h2>
+    <p class="muted" style="margin-top:0">Signed in as <b style="color:var(--ink)">${esc(adminUser || "")}</b>. Username stays the same — this only changes the password.</p>
+    <form data-form="changePassword" novalidate style="max-width:360px">
+      <div class="fld"><label for="oldPassword">Current password</label><input type="password" id="oldPassword" name="oldPassword" autocomplete="current-password"></div>
+      <div class="fld" style="margin-top:12px"><label for="newPassword">New password</label><input type="password" id="newPassword" name="newPassword" autocomplete="new-password"></div>
+      <div class="fld" style="margin-top:12px"><label for="newPassword2">Confirm new password</label><input type="password" id="newPassword2" name="newPassword2" autocomplete="new-password"></div>
+      <div class="msg" id="pwMsg"></div>
+      <button type="submit" class="btn amber" id="pwBtn">Update password</button>
+    </form>
+    <div class="btnrow" style="margin-top:16px"><button class="btn" data-action="logout">Log out</button></div></section></div>`;
+}
+
+const VIEWS = { dashboard: viewDashboard, members: viewMembers, payments: viewPayments, settings: viewSettings };
+const AFTER = { members: renderMemberList, payments: renderLedger };
+
+function render() {
+  if (!VIEWS[state.view]) state.view = "dashboard";
+  $$(".nav a").forEach(a => a.classList.toggle("on", a.dataset.view === state.view));
+  $("#pageTitle").textContent = TITLES[state.view];
+  const n = Store.data.members.length;
+  $("#pageSub").textContent = { dashboard: "Where the portfolio stands right now", members: n + (n === 1 ? " borrower" : " borrowers") + ", those needing attention come first", payments: "Every payment recorded, newest first", settings: "Terms, backup and connections" }[state.view];
+  $("#view").innerHTML = VIEWS[state.view]();
+  if (AFTER[state.view]) AFTER[state.view]();
+  const behind = Store.data.members.map(m => summary(m)).filter(s => s.status === "behind" || s.status === "defaulted").length;
+  const b = $("#navBadge"); b.hidden = !behind; b.textContent = behind;
+  $("#sideFoot").innerHTML = Store.data.settings.staff ? `Working as <b style="color:#fff">${esc(Store.data.settings.staff)}</b>` : `<a href="#settings">Set your name</a>`;
+}
+
+/* ------------------------------- forms ------------------------------ */
+const fld = (name, label, input, hint) => `<div class="fld" data-f="${name}"><label for="f-${name}">${label}</label>${input}${hint ? `<span class="hint">${hint}</span>` : ""}<div class="err" data-err="${name}"></div></div>`;
+const inp = (name, type, val, extra = "") => `<input id="f-${name}" name="${name}" type="${type}" value="${esc(val ?? "")}" ${extra}>`;
+const dlgHead = t => `<header><h2>${t}</h2><button type="button" class="x" data-action="closeModal" aria-label="Close">&times;</button></header>`;
+const termsBlock = () => `<details class="terms"><summary>Read the terms and conditions</summary><ol>${TERMS.map(([h, b]) => `<li><b>${h}.</b> ${esc(b)}</li>`).join("")}</ol></details>`;
+const loanSummaryHTML = () => `<div class="summary4" data-role="loansum"></div>`;
+
+function setErrors(f, errs) {
+  $$(".err", f).forEach(e => e.textContent = ""); $$(".bad", f).forEach(e => e.classList.remove("bad"));
+  const keys = Object.keys(errs); if (!keys.length) return false;
+  keys.forEach(k => { const e = $(`[data-err="${k}"]`, f); if (e) { e.textContent = errs[k]; const p = e.closest(".fld, .check"); if (p) p.classList.add("bad"); } });
+  const first = f.elements[keys[0]]; if (first) { first.focus(); first.scrollIntoView({ block: "center" }); }
+  return true;
+}
+
+function openMemberForm(id) {
+  const m = id ? byId(id) : null, edit = !!m, L = m && m.loan, g = m ? m.guarantor : {}, S = Store.data.settings, t = today();
+  const locked = edit && m.payments.some(p => p.cycle === L.cycle);
+  openModal(`<form class="dlg" data-form="member" ${edit ? `data-id="${m.id}"` : ""} novalidate>
+    ${dlgHead(edit ? "Update profile" : "New loan")}
+    <div class="body">
+      <fieldset><legend>Applicant</legend><div class="cols">
+        <div class="full">${fld("fullName", "Full name", inp("fullName", "text", m?.name, 'autocomplete="off"'))}</div>
+        ${fld("idNo", "National ID number", inp("idNo", "text", m?.idNo, 'inputmode="numeric" autocomplete="off"'))}
+        ${fld("dob", "Date of birth", inp("dob", "date", m?.dob, `max="${t}"`), `Must be ${CONFIG.MIN_AGE} or older`)}
+        ${fld("phone", "Telephone number", inp("phone", "tel", m ? showPhone(m.phone) : "", 'inputmode="tel" placeholder="0707397XXX"'))}
+        ${fld("occupation", "Occupation", `<select id="f-occupation" name="occupation"><option value="">Choose one</option>${OCCUPATIONS.map(o => `<option ${m?.occupation === o ? "selected" : ""}>${o}</option>`).join("")}</select>`)}
+        <div data-f="occupationOther" ${m?.occupation === "Others" ? "" : "hidden"}>${fld("occupationOther", "Describe the work", inp("occupationOther", "text", m?.occupationOther))}</div>
+        ${fld("plate", "Business Identity Number (if applicable)", inp("plate", "text", m?.plate, 'autocapitalize="characters" placeholder=""'))}
+        ${fld("stall", "Stall number (if applicable)", inp("stall", "text", m?.stall))}
+        <div class="full">${fld("area", "Area of operation", inp("area", "text", m?.area))}</div>
+      </div></fieldset>
+      <fieldset><legend>Loan</legend><div class="cols">
+        ${fld("principal", "Amount borrowed (KSh)", inp("principal", "number", L?.principal, `min="${CONFIG.MIN_LOAN}" step="1" inputmode="numeric" ${locked ? "readonly" : ""}`), locked ? "Locked because payments exist. Delete them first to change it." : `Minimum ${money(CONFIG.MIN_LOAN)}`)}
+        ${fld("start", "First repayment day", inp("start", "date", L?.start || t, locked ? "readonly" : ""), "Day 1 of the 13-day period")}
+        ${fld("applied", "Date of application", inp("applied", "date", L?.applied || t))}
+        ${fld("servedBy", "Served by", inp("servedBy", "text", L?.servedBy || S.staff))}
+        <div class="full">${loanSummaryHTML()}</div>
+      </div></fieldset>
+      <fieldset><legend>Guarantor (witness)</legend><div class="cols">
+        <div class="full">${fld("gName", "Guarantor's full name", inp("gName", "text", g.name, 'autocomplete="off"'))}</div>
+        ${fld("gPhone", "Telephone number", inp("gPhone", "tel", g.phone ? showPhone(g.phone) : "", 'inputmode="tel"'), "Must be reachable at any time during the loan")}
+        ${fld("gIdNo", "National ID number", inp("gIdNo", "text", g.idNo, 'inputmode="numeric" autocomplete="off"'))}
+        <div class="full"><label class="check"><input type="checkbox" name="gVerified" ${g.verified ? "checked" : ""}><span>Guarantor's identity has been checked against their ID card</span></label><div class="err" data-err="gVerified"></div></div>
+      </div></fieldset>
+      ${termsBlock()}
+      ${edit ? `<p class="muted" style="margin:0">Terms were accepted when this loan was created.</p>` : `
+      <label class="check"><input type="checkbox" name="okId"><span>Applicant presented a valid National ID card today</span></label><div class="err" data-err="okId"></div>
+      <label class="check"><input type="checkbox" name="okTerms"><span>Applicant has read and understood the terms and conditions</span></label><div class="err" data-err="okTerms"></div>`}
+    </div>
+    <footer><button type="button" class="btn" data-action="closeModal">Cancel</button><button type="submit" class="btn amber">${edit ? "Save changes" : "Create loan"}</button></footer></form>`);
+  memberFormLive($("form", dlg));
+}
+function memberFormLive(f) {
+  const P = parseFloat(f.elements.principal.value), st = f.elements.start.value;
+  const box = $('[data-role="loansum"]', f);
+  if (P > 0 && st) {
+    const L = buildLoan(P, st, 1, st, "");
+    box.innerHTML = `<div><span>Interest (${Math.round(L.rate * 100)}%)</span><b>${money(L.interest)}</b></div><div><span>Total to repay</span><b>${money(L.total)}</b></div><div><span>Daily installment</span><b>${money(L.daily)}</b></div><div><span>Last day</span><b>${fmtDate(L.end)}</b></div>`;
+  } else box.innerHTML = `<div style="grid-column:1/-1"><span>Enter the amount and start date to see interest, total and daily installment.</span></div>`;
+  $('[data-f="occupationOther"]', f).hidden = f.elements.occupation.value !== "Others";
+}
+
+function submitMember(f) {
+  const editId = f.dataset.id, m0 = editId ? byId(editId) : null, t = today();
+  const locked = m0 && m0.payments.some(p => p.cycle === m0.loan.cycle);
+  const v = n => (f.elements[n] ? f.elements[n].value : "").trim(), chk = n => !!(f.elements[n] && f.elements[n].checked);
+  const e = {};
+  const rec = { name: v("fullName").replace(/\s+/g, " "), idNo: v("idNo").replace(/\s/g, ""), dob: v("dob"), phone: normPhone(v("phone")), occupation: v("occupation"), occupationOther: v("occupationOther"), plate: v("plate").toUpperCase(), stall: v("stall"), area: v("area") };
+  const G = { name: v("gName").replace(/\s+/g, " "), phone: normPhone(v("gPhone")), idNo: v("gIdNo").replace(/\s/g, ""), verified: chk("gVerified") };
+  let principal = locked ? m0.loan.principal : Math.round(parseFloat(v("principal")));
+  const start = locked ? m0.loan.start : v("start"), applied = v("applied"), servedBy = v("servedBy");
+  if (rec.name.length < 3) e.fullName = "Enter the applicant's full name.";
+  if (!/^\d{6,10}$/.test(rec.idNo)) e.idNo = "Enter the ID number using digits only (6 to 10)."; 
+  else { const dup = Store.data.members.find(x => x.idNo === rec.idNo && x.id !== editId); if (dup) e.idNo = `Already registered to ${dup.name} (${dup.code}). Renew that loan instead.`; }
+  if (!rec.dob) e.dob = "Enter the date of birth.";
+  else if (rec.dob > t) e.dob = "Date of birth cannot be in the future.";
+  else if (ageOn(rec.dob, t) < CONFIG.MIN_AGE) e.dob = `Applicant is ${ageOn(rec.dob, t)}. Loans are only for ${CONFIG.MIN_AGE} and above.`;
+  if (!rec.phone) e.phone = "Enter a Kenyan number such as 0712 345 678.";
+  if (!rec.occupation) e.occupation = "Choose the applicant's occupation.";
+  if (rec.occupation === "Others" && !rec.occupationOther) e.occupationOther = "Say what the applicant does.";
+  if ((rec.occupation === "Driver" || rec.occupation === "Owner of the vehicle") && !rec.plate) e.plate = "Enter the vehicle number plate.";
+  if (rec.occupation === "Green grocery" && !rec.stall) e.stall = "Enter the stall number.";
+  if (!rec.area) e.area = "Enter the area of operation.";
+  if (!locked) {
+    if (!(principal >= CONFIG.MIN_LOAN)) e.principal = `Minimum loan is ${money(CONFIG.MIN_LOAN)}.`;
+    else if (CONFIG.MAX_LOAN && principal > CONFIG.MAX_LOAN) e.principal = `Maximum loan is ${money(CONFIG.MAX_LOAN)}.`;
+    if (!start) e.start = "Choose the first repayment day.";
+  }
+  if (!applied) e.applied = "Enter the application date."; else if (start && applied > start) e.applied = "Application cannot be after the first repayment day.";
+  if (!servedBy) e.servedBy = "Enter who served the applicant.";
+  if (G.name.length < 3) e.gName = "Enter the guarantor's full name.";
+  if (!G.phone) e.gPhone = "Enter a Kenyan number such as 0712 345 678.";
+  else if (G.phone === rec.phone) e.gPhone = "Guarantor needs their own phone number.";
+  if (!/^\d{6,10}$/.test(G.idNo)) e.gIdNo = "Enter the guarantor's ID number using digits only.";
+  else if (G.idNo === rec.idNo) e.gIdNo = "The guarantor cannot be the borrower.";
+  if (!G.verified) e.gVerified = "Check the guarantor's ID before saving.";
+  if (!m0) { if (!chk("okId")) e.okId = "A valid National ID must be presented."; if (!chk("okTerms")) e.okTerms = "The applicant must accept the terms."; }
+  if (setErrors(f, e)) return;
+
+  if (m0) {
+    Object.assign(m0, rec, { guarantor: G });
+    if (!locked) m0.loan = buildLoan(principal, start, m0.loan.cycle, applied, servedBy);
+    else { m0.loan.applied = applied; m0.loan.servedBy = servedBy; }
+    persist("member.save", m0); closeModal(); render(); toast(`Saved changes to ${m0.name}.`);
+  } else {
+    const c = Store.data.counters; c.member++;
+    const m = { id: uid("m"), code: "M" + pad(c.member, 4), ...rec, guarantor: G, loan: buildLoan(principal, start, 1, applied, servedBy), pastLoans: [], payments: [], termsAccepted: true, createdAt: Date.now() };
+    Store.data.members.push(m); state.open.add(m.id); state.q = ""; state.status = "all";
+    Store.data.settings.staff = Store.data.settings.staff || servedBy;
+    persist("member.save", m); closeModal(); go("members");
+    toast(`Loan of ${money(principal)} created for ${m.name}.`, { label: "Print agreement", run: () => printDoc(agreementHTML(m)) });
+  }
+}
+
+/* payments */
+function openPay(id) {
+  const m = byId(id); if (!m) return; const s = summary(m);
+  if (s.status === "completed") return toast("This loan is fully paid.");
+  const S = Store.data.settings, def = suggestAmount(s), t = today();
+  const chips = [];
+  if (s.dueNow > 0.004) chips.push([s.dueNow, `Due now ${money(s.dueNow)}`]);
+  if (s.nextDay && Math.abs(s.L.daily - s.dueNow) > 0.004 && s.L.daily < s.balance) chips.push([s.L.daily, `One day ${money(s.L.daily)}`]);
+  if (!chips.some(c => Math.abs(c[0] - s.balance) < 0.005)) chips.push([s.balance, `Clear loan ${money(s.balance)}`]);
+  openModal(`<form class="dlg" data-form="payment" data-id="${m.id}" novalidate>
+    ${dlgHead("Record payment")}
+    <div class="body">
+      <div class="mini-card"><div><b>${esc(m.name)}</b><div class="muted" style="font-size:13px">${esc(m.code)}, ${esc(occLabel(m))}</div></div>
+        <div style="text-align:right"><b>${money(s.balance)}</b><div class="muted" style="font-size:13px">balance${s.arrears > 0.004 ? `, ${money(s.arrears)} overdue` : ""}</div></div></div>
+      <div class="cols">
+        <div class="full">${fld("amount", "Amount received (KSh)", inp("amount", "number", def, 'min="1" step="any" inputmode="decimal"'))}
+          <div class="qchips">${chips.map(([a, l]) => `<button type="button" data-action="setAmt" data-amt="${a}">${l}</button>`).join("")}</div></div>
+        <div class="full"><span class="lbl">Payment mode</span><div class="segs" style="margin-top:6px">
+          ${Object.keys(MODES).map(k => `<label class="seg"><input type="radio" name="mode" value="${k}" ${S.lastMode === k ? "checked" : ""}><span>${MODES[k]}</span></label>`).join("")}</div></div>
+        <div class="full" data-f="ref">${fld("ref", '<span data-role="reflbl">Reference</span>', inp("ref", "text", "", 'autocapitalize="characters" autocomplete="off"'))}</div>
+        ${fld("date", "Date paid", inp("date", "date", t, `min="${s.L.start}" max="${t}"`))}
+        ${fld("receivedBy", "Received by", inp("receivedBy", "text", S.staff))}
+        <div class="full">${fld("note", "Note (optional)", inp("note", "text", ""))}</div>
+      </div>
+      <div class="preview" data-role="preview"></div>
+    </div>
+    <footer><button type="button" class="btn" data-action="closeModal">Cancel</button><button type="submit" class="btn amber">Save payment</button></footer></form>`);
+  const f = $("form", dlg); payFormLive(f); $("#f-amount").select();
+}
+function payFormLive(f) {
+  const m = byId(f.dataset.id), s = summary(m), amt = parseFloat(f.elements.amount.value) || 0;
+  const mode = f.elements.mode.value, wrap = $('[data-f="ref"]', f);
+  wrap.hidden = mode === "cash";
+  $('[data-role="reflbl"]', f).textContent = mode === "mpesa" ? "M-Pesa confirmation code" : "Bank reference or slip number";
+  const pv = $('[data-role="preview"]', f);
+  if (amt > 0 && amt <= s.balance + 0.004) {
+    const list = allocationPreview(s, amt);
+    pv.textContent = `Covers ${list.map(x => "Day " + x.n + (x.full ? "" : " (part)")).join(", ")}. Balance after: ${money(Math.max(0, s.balance - amt))}.`;
+  } else pv.textContent = "";
+}
+function submitPayment(f) {
+  const m = byId(f.dataset.id), s = summary(m), t = today(), e = {};
+  const v = n => (f.elements[n].value || "").trim();
+  const amount = r2(parseFloat(v("amount"))), mode = f.elements.mode.value, ref = v("ref").toUpperCase(), date = v("date"), by = v("receivedBy");
+  if (!(amount > 0)) e.amount = "Enter the amount received.";
+  else if (amount > s.balance + 0.004) e.amount = `That is more than the ${money(s.balance)} still owed.`;
+  if (!date) e.date = "Choose the date paid."; else if (date > t) e.date = "Date cannot be in the future."; else if (date < s.L.start) e.date = "Loan starts on " + fmtDate(s.L.start) + ".";
+  if (mode !== "cash") {
+    if (!ref) e.ref = mode === "mpesa" ? "Enter the M-Pesa confirmation code." : "Enter the bank reference.";
+    else { const dup = Store.data.members.flatMap(x => x.payments.map(p => ({ p, x }))).find(o => o.p.ref === ref); if (dup) e.ref = `Already recorded for ${dup.x.name} on ${fmtDate(dup.p.date)}.`; }
+  }
+  if (!by) e.receivedBy = "Enter who received the money.";
+  if (setErrors(f, e)) return;
+  const c = Store.data.counters; c.receipt++;
+  const p = { id: uid("p"), memberId: m.id, cycle: m.loan.cycle, receipt: "RC-" + pad(c.receipt, 6), date, amount, mode, ref: mode === "cash" ? "" : ref, receivedBy: by, note: v("note"), createdAt: Date.now() };
+  m.payments.push(p); Store.data.settings.lastMode = mode; if (!Store.data.settings.staff) Store.data.settings.staff = by;
+  persist("payment.add", p); closeModal(); render();
+  const after = summary(m);
+  toast(after.status === "completed" ? `${m.name} has cleared the loan. ${money(amount)} received.` : `${money(amount)} received from ${m.name} by ${MODES[mode]}.`, { label: "Receipt", run: () => printDoc(receiptHTML(m, p)) });
+}
+function openPicker() {
+  openModal(`<div class="dlg">${dlgHead("Record payment")}<div class="body"><div class="fld"><label for="pickQ">Find the member</label><input id="pickQ" type="search" placeholder="Name, code, phone, plate or stall" autocomplete="off"></div><div class="pick-list" id="pickList"></div></div></div>`, "narrow");
+  renderPicker(); setTimeout(() => { const q = $("#pickQ"); if (q) q.focus(); }, 0);
+}
+function renderPicker() {
+  const q = ($("#pickQ").value || "").trim().toLowerCase();
+  let rows = Store.data.members.map(m => summary(m)).filter(s => s.status !== "completed" && s.status !== "upcoming");
+  if (q) rows = rows.filter(s => [s.m.name, s.m.code, s.m.phone, s.m.plate, s.m.stall, s.m.idNo].join(" ").toLowerCase().includes(q));
+  rows.sort((a, b) => b.dueNow - a.dueNow || a.m.name.localeCompare(b.m.name));
+  $("#pickList").innerHTML = rows.length ? rows.map(s => `<button data-action="pay" data-id="${s.m.id}"><span><b>${esc(s.m.name)}</b><br><small class="muted">${esc(s.m.code)}, ${esc(occLabel(s.m))}</small></span><span style="text-align:right">${s.dueNow > 0.004 ? `<b>${money(s.dueNow)}</b><br><small class="muted">due now</small>` : `<b>${money(s.balance)}</b><br><small class="muted">balance</small>`}</span></button>`).join("")
+    : `<p class="muted" style="padding:14px;margin:0">${Store.data.members.length ? "No running loan matches that search." : "There are no loans yet."}</p>`;
+}
+function openRenew(id) {
+  const m = byId(id), t = today(), S = Store.data.settings; if (!m) return;
+  openModal(`<form class="dlg" data-form="renew" data-id="${m.id}" novalidate>${dlgHead("Renew loan")}
+    <div class="body"><div class="mini-card"><div><b>${esc(m.name)}</b><div class="muted" style="font-size:13px">Cleared loan ${m.loan.cycle} for ${money(m.loan.principal)}</div></div></div>
+      <div class="cols">${fld("principal", "New amount (KSh)", inp("principal", "number", m.loan.principal, `min="${CONFIG.MIN_LOAN}" step="1"`))}${fld("start", "First repayment day", inp("start", "date", t))}
+        ${fld("applied", "Date of application", inp("applied", "date", t))}${fld("servedBy", "Served by", inp("servedBy", "text", S.staff))}<div class="full">${loanSummaryHTML()}</div></div>
+      <p class="muted" style="margin:0">Guarantor stays ${esc(m.guarantor.name)}. Update the profile first if that has changed.</p>${termsBlock()}
+      <label class="check"><input type="checkbox" name="okTerms"><span>Borrower has read and understood the terms and conditions</span></label><div class="err" data-err="okTerms"></div></div>
+    <footer><button type="button" class="btn" data-action="closeModal">Cancel</button><button type="submit" class="btn amber">Start new loan</button></footer></form>`);
+  renewLive($("form", dlg));
+}
+function renewLive(f) {
+  const P = parseFloat(f.elements.principal.value), st = f.elements.start.value, box = $('[data-role="loansum"]', f);
+  if (P > 0 && st) { const L = buildLoan(P, st, 1, st, ""); box.innerHTML = `<div><span>Interest</span><b>${money(L.interest)}</b></div><div><span>Total to repay</span><b>${money(L.total)}</b></div><div><span>Daily installment</span><b>${money(L.daily)}</b></div><div><span>Last day</span><b>${fmtDate(L.end)}</b></div>`; }
+  else box.innerHTML = "";
+}
+function submitRenew(f) {
+  const m = byId(f.dataset.id), v = n => f.elements[n].value.trim(), e = {};
+  const principal = Math.round(parseFloat(v("principal"))), start = v("start"), applied = v("applied"), by = v("servedBy");
+  if (!(principal >= CONFIG.MIN_LOAN)) e.principal = `Minimum loan is ${money(CONFIG.MIN_LOAN)}.`; else if (CONFIG.MAX_LOAN && principal > CONFIG.MAX_LOAN) e.principal = `Maximum loan is ${money(CONFIG.MAX_LOAN)}.`;
+  if (!start) e.start = "Choose the first repayment day."; else if (start <= m.loan.end) e.start = "Must be after the previous loan ended on " + fmtDate(m.loan.end) + ".";
+  if (!applied) e.applied = "Enter the application date."; else if (start && applied > start) e.applied = "Application cannot be after the first repayment day.";
+  if (!by) e.servedBy = "Enter who served the borrower.";
+  if (!f.elements.okTerms.checked) e.okTerms = "The borrower must accept the terms.";
+  if (setErrors(f, e)) return;
+  m.pastLoans = m.pastLoans || []; m.pastLoans.push(m.loan); m.loan = buildLoan(principal, start, m.loan.cycle + 1, applied, by);
+  state.open.add(m.id); persist("loan.renew", { memberId: m.id, loan: m.loan }); closeModal(); render();
+  toast(`New loan of ${money(principal)} started for ${m.name}.`, { label: "Print agreement", run: () => printDoc(agreementHTML(m)) });
+}
+
+function confirmBox(title, body, okLabel, onOk) {
+  openModal(`<div class="dlg">${dlgHead(title)}<div class="body"><p style="margin:0">${body}</p></div><footer><button type="button" class="btn" data-action="closeModal">Keep it</button><button type="button" class="btn danger solid" id="confirmOk">${okLabel}</button></footer></div>`, "narrow");
+  $("#confirmOk").onclick = () => { closeModal(); onOk(); };
+}
+
+/* ------------------------------ printing ---------------------------- */
+function printDoc(html) { closeModal(); $("#printArea").innerHTML = html; setTimeout(() => window.print(), 80); }
+function agreementHTML(m) {
+  const L = m.loan, g = m.guarantor, f = v => `<span class="fill">${esc(v)}</span>`;
+  const occ = OCCUPATIONS.map((o, i) => `(${"abcde"[i]}) ${m.occupation === o ? "<b>[ X ]</b>" : "[&nbsp;&nbsp;]"} ${o}${o === "Others" && m.occupation === "Others" ? " " + f(m.occupationOther) : ""}`).join(" &nbsp; ");
+  return `<h1>${esc(CONFIG.BUSINESS)}</h1><p class="sub">Terms and Conditions</p>
+  <ol>${TERMS.map(([h, b]) => `<li><b>${h}:</b> ${esc(b)}</li>`).join("")}</ol>
+  <h2>Loan Commitment Form</h2>
+  <p>I, Mr./Mrs. ${f(m.name)} of ID card No. ${f(m.idNo)} have read and understood the terms and conditions of Okello\u2019s Quick Loans and I have agreed to obey. I have therefore applied for K.sh ${f(num(L.principal))} loan under the witness of Mr./Mrs. ${f(g.name)}. I will pay back K.sh ${f(num(L.total))} inclusive of ${Math.round(L.rate * 100)}% interest, within a period of ${CONFIG.DAYS} days from ${f(fmtDate(L.start))} to ${f(fmtDate(L.end))}. The daily installment is K.sh ${f(num(L.daily))}.</p>
+  <p><b>1. Applicant occupation</b><br>${occ}</p>
+  <p>Telephone No: ${f(showPhone(m.phone))} &nbsp; Number plate: ${f(m.plate || "n/a")} &nbsp; Stall number: ${f(m.stall || "n/a")}<br>Area of operation: ${f(m.area)}</p>
+  <div class="lines"><div>Applicant's signature</div><div>Date</div></div>
+  <p><b>2. Witnesses</b><br>Witness (guarantor): ${f(g.name)} &nbsp; Telephone No: ${f(showPhone(g.phone))} &nbsp; ID No: ${f(g.idNo)}</p>
+  <div class="lines"><div>Guarantor's signature</div><div>Date</div></div>
+  <p style="margin-top:22px">Date of application: ${f(fmtDate(L.applied))} &nbsp; Served by: ${f(L.servedBy)} &nbsp; Member code: ${f(m.code)}</p>`;
+}
+function receiptHTML(m, p) {
+  const list = loanPayments(m, p.cycle), idx = list.findIndex(x => x.id === p.id);
+  const loan = p.cycle === m.loan.cycle ? m.loan : (m.pastLoans || []).find(l => l.cycle === p.cycle) || m.loan;
+  const paidTo = list.slice(0, idx + 1).reduce((s, x) => s + x.amount, 0);
+  return `<div class="rc"><h1 style="font-size:17px">${esc(CONFIG.BUSINESS)}</h1><p class="sub">Payment receipt</p>
+  <table><tr><td>Receipt</td><td>${esc(p.receipt)}</td></tr><tr><td>Date</td><td>${fmtDate(p.date)}</td></tr><tr><td>Member</td><td>${esc(m.name)} (${esc(m.code)})</td></tr>
+  <tr><td>Amount</td><td>KSh ${num(p.amount)}</td></tr><tr><td>Mode</td><td>${MODES[p.mode]}</td></tr>${p.ref ? `<tr><td>Reference</td><td>${esc(p.ref)}</td></tr>` : ""}
+  <tr><td>Paid so far</td><td>KSh ${num(paidTo)}</td></tr><tr><td>Balance</td><td>KSh ${num(Math.max(0, loan.total - paidTo))}</td></tr><tr><td>Received by</td><td>${esc(p.receivedBy)}</td></tr></table>
+  <p class="sub" style="margin-top:12px">Thank you</p></div>`;
+}
+
+/* ------------------------- export, backup, demo --------------------- */
+const csvRows = rows => rows.map(r => r.map(v => { v = String(v ?? ""); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(",")).join("\r\n");
+function download(name, text, type) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+function exportMembers() {
+  const rows = [["id", "code", "name", "idNo", "dob", "phone", "occupation", "occupationOther", "plate", "stall", "area", "guarantorName", "guarantorPhone", "guarantorIdNo", "guarantorVerified", "cycle", "principal", "interest", "total", "daily", "start", "end", "applied", "servedBy", "status", "paid", "balance", "createdAt"]];
+  Store.data.members.forEach(m => { const s = summary(m), L = m.loan, g = m.guarantor; rows.push([m.id, m.code, m.name, m.idNo, m.dob, m.phone, m.occupation, m.occupationOther, m.plate, m.stall, m.area, g.name, g.phone, g.idNo, g.verified, L.cycle, L.principal, L.interest, L.total, L.daily, L.start, L.end, L.applied, L.servedBy, s.status, s.paid, s.balance, m.createdAt]); });
+  download("members-" + today() + ".csv", "\ufeff" + csvRows(rows), "text/csv");
+}
+function exportPayments() {
+  const rows = [["id", "memberId", "code", "name", "cycle", "receipt", "date", "amount", "mode", "ref", "receivedBy", "note", "createdAt"]];
+  Store.data.members.forEach(m => m.payments.forEach(p => rows.push([p.id, m.id, m.code, m.name, p.cycle, p.receipt, p.date, p.amount, p.mode, p.ref, p.receivedBy, p.note, p.createdAt])));
+  download("payments-" + today() + ".csv", "\ufeff" + csvRows(rows), "text/csv");
+}
+function loadDemo() {
+  const t = today(); let seed = 11; const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  const staff = Store.data.settings.staff || "Okello";
+  const defs = [
+    { n: "Peter Otieno", o: "Driver", plate: "KDA 214M", area: "Kencom stage", p: 10000, ago: 5, pat: "yday", g: "Rose Akinyi" },
+    { n: "Grace Wanjiru", o: "Green grocery", stall: "G-14", area: "Wakulima Market", p: 3000, ago: 8, pat: "behind", g: "Esther Muthoni" },
+    { n: "Hassan Mohamed", o: "Owner of the vehicle", plate: "KCT 883P", area: "Ngara", p: 20000, ago: 3, pat: "today", g: "Amina Yusuf" },
+    { n: "Mary Achieng", o: "Hotel", area: "Kisumu Ndogo", p: 5000, ago: 10, pat: "partial", g: "John Odhiambo" },
+    { n: "Joseph Kimani", o: "Driver", plate: "KBZ 452Q", area: "Githurai 45", p: 8000, ago: 20, pat: "default", g: "Aloyce John" },
+    { n: "Faith Chebet", o: "Green grocery", stall: "B-07", area: "Gikomba", p: 2000, ago: 15, pat: "done", g: "Kevin Rotich" },
+    { n: "Brian Mwangi", o: "Others", oo: "Barber", area: "Kawangware", p: 4000, ago: 2, pat: "ahead", g: "Lydia Wambui" },
+    { n: "Lucy Njeri", o: "Green grocery", stall: "C-21", area: "Wakulima Market", p: 2500, ago: 0, pat: "yday", g: "Paul Njoroge" },
+    { n: "Samuel Kariuki", o: "Driver", plate: "KDG 019T", area: "Railways", p: 6000, ago: -1, pat: "none", g: "Ann Wangari" },
+    { n: "Aisha Abdi", o: "Hotel", area: "Eastleigh", p: 12000, ago: 6, pat: "behind", g: "Farah Omar" }
+  ];
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789"; let added = 0;
+  defs.forEach((d, i) => {
+    const idNo = String(30000000 + i * 271); if (Store.data.members.some(x => x.idNo === idNo)) return;
+    const c = Store.data.counters; c.member++;
+    const start = addDays(t, -d.ago), L = buildLoan(d.p, start, 1, addDays(start, -1), staff);
+    const m = { id: uid("m"), code: "M" + pad(c.member, 4), name: d.n, idNo, dob: `${1975 + i * 2}-0${(i % 9) + 1}-1${i % 9}`, phone: "0711" + pad(i * 7 + 101, 6), occupation: d.o, occupationOther: d.oo || "", plate: d.plate || "", stall: d.stall || "", area: d.area,
+      guarantor: { name: d.g, phone: "0722" + pad(i * 13 + 205, 6), idNo: String(25000000 + i * 331), verified: true }, loan: L, pastLoans: [], payments: [], termsAccepted: true, createdAt: Date.now() - (d.ago + 1) * 864e5 };
+    const elapsed = Math.min(CONFIG.DAYS, diffDays(t, start) + 1);
+    for (let k = 0; k < CONFIG.DAYS; k++) {
+      const date = addDays(start, k); if (date > t) break;
+      const pay = { yday: date < t, today: true, behind: k < Math.floor(elapsed * .4), partial: true, ahead: true, done: true, default: k < 8, none: false }[d.pat];
+      if (!pay) continue;
+      const amount = d.pat === "partial" && k % 2 === 0 ? r2(L.daily / 2) : L.daily, r = rnd(), mode = r < .6 ? "mpesa" : r < .9 ? "cash" : "bank";
+      let ref = ""; if (mode === "mpesa") for (let j = 0; j < 10; j++) ref += chars[Math.floor(rnd() * chars.length)]; if (mode === "bank") ref = "BNK" + pad(Math.floor(rnd() * 999999), 6);
+      Store.data.counters.receipt++;
+      m.payments.push({ id: uid("p"), memberId: m.id, cycle: 1, receipt: "RC-" + pad(Store.data.counters.receipt, 6), date, amount, mode, ref, receivedBy: staff, note: "", createdAt: parseISO(date).getTime() + 9 * 36e5 + k });
+    }
+    if (d.pat === "ahead") { Store.data.counters.receipt++; m.payments.push({ id: uid("p"), memberId: m.id, cycle: 1, receipt: "RC-" + pad(Store.data.counters.receipt, 6), date: t, amount: r2(2 * L.daily), mode: "cash", ref: "", receivedBy: staff, note: "Paid two days ahead", createdAt: Date.now() }); }
+    Store.data.members.push(m); added++;
+  });
+  persist("bulk.replace", { members: Store.data.members }); render(); toast(added ? `Added ${added} sample members.` : "Sample members are already loaded.");
+}
+
+/* ------------------------------- actions ---------------------------- */
+function go(view) { if (location.hash === "#" + view) render(); else location.hash = "#" + view; }
+const actions = {
+  noop() {},
+  closeModal,
+  logout() { doLogout(); },
+  add() { openMemberForm(); },
+  edit(id) { openMemberForm(id); },
+  pay(id) { openPay(id); },
+  pick() { openPicker(); },
+  renew(id) { openRenew(id); },
+  toggle(id) {
+    if (state.open.has(id)) state.open.delete(id); else state.open.add(id);
+    const el = $("#mem-" + id); if (!el) return;
+    el.outerHTML = memberCard(summary(byId(id)));
+    const b = $(`#mem-${id} .mem-toggle`); if (b && document.activeElement === document.body) b.focus();
+  },
+  filter(id) { state.status = id; renderMemberList(); },
+  setAmt(id, el) { const i = $("#f-amount"); i.value = el.dataset.amt; payFormLive(i.form); i.focus(); },
+  clearFilters() { state.pq = state.pfrom = state.pto = ""; state.pmode = "all"; render(); },
+  agreement(id) { printDoc(agreementHTML(byId(id))); },
+  receipt(id, el) { const m = byId(id); printDoc(receiptHTML(m, m.payments.find(p => p.id === el.dataset.pid))); },
+  delete(id) {
+    const m = byId(id), n = m.payments.length, paid = m.payments.reduce((s, p) => s + p.amount, 0);
+    confirmBox("Delete member?", `<b>${esc(m.name)}</b> (${esc(m.code)}) will be removed along with the loan, guarantor details and ${n} ${n === 1 ? "payment" : "payments"} totalling ${money(paid)}. This cannot be undone.`, "Delete member", () => {
+      Store.data.members = Store.data.members.filter(x => x.id !== id); state.open.delete(id); persist("member.delete", { id }); render(); toast(`${m.name} was deleted.`);
+    });
+  },
+  delpay(id, el) {
+    const m = byId(id), p = m.payments.find(x => x.id === el.dataset.pid);
+    confirmBox("Delete this payment?", `${money(p.amount)} from ${esc(m.name)} on ${fmtDate(p.date)} (${MODES[p.mode]}${p.ref ? ", " + esc(p.ref) : ""}, ${esc(p.receipt)}) will be removed and the 13-day record recalculated.`, "Delete payment", () => {
+      m.payments = m.payments.filter(x => x.id !== p.id); persist("payment.delete", { id: p.id, memberId: m.id }); render(); toast("Payment deleted.");
+    });
+  },
+  demo() { loadDemo(); },
+  wipe() {
+    confirmBox("Erase everything?", "All members, loans and payments stored in this browser will be deleted. Export a backup first if you might need them.", "Erase everything", () => {
+      Store.data = { members: [], counters: { member: 0, receipt: 0 }, settings: Store.data.settings }; state.open.clear(); persist("wipe", null); render(); toast("All data erased.");
+    });
+  },
+  exportMembers, exportPayments,
+  exportJson() { download("okello-loans-backup-" + today() + ".json", JSON.stringify(Store.data, null, 2), "application/json"); }
+};
+document.addEventListener("click", e => {
+  $$("details.menu[open]").forEach(d => { if (!(e.target.closest("summary") && d.contains(e.target))) d.removeAttribute("open"); });
+  const el = e.target.closest("[data-action]"); if (!el) return;
+  const fn = actions[el.dataset.action]; if (fn) fn(el.dataset.id, el, e);
+});
+document.addEventListener("submit", e => {
+  e.preventDefault(); const f = e.target;
+  ({ member: submitMember, payment: submitPayment, renew: submitRenew, login: submitLogin, changePassword: submitChangePassword }[f.dataset.form] || (() => {}))(f);
+});
+function onInput(e) {
+  const t = e.target, id = t.id;
+  if (id === "mSearch") { state.q = t.value; return renderMemberList(); }
+  if (id === "pSearch") { state.pq = t.value; return renderLedger(); }
+  if (id === "pMode") { state.pmode = t.value; return renderLedger(); }
+  if (id === "pFrom") { state.pfrom = t.value; return renderLedger(); }
+  if (id === "pTo") { state.pto = t.value; return renderLedger(); }
+  if (id === "pickQ") return renderPicker();
+  if (id === "staffName") { Store.data.settings.staff = t.value.trim(); Store.save(); return render_foot(); }
+  if (id === "restoreFile" && e.type === "change") return restoreBackup(t.files[0], t);
+  const f = t.closest && t.closest("form[data-form]");
+  if (f) ({ member: memberFormLive, payment: payFormLive, renew: renewLive }[f.dataset.form] || (() => {}))(f);
+}
+document.addEventListener("input", onInput); document.addEventListener("change", onInput);
+function render_foot() {
+  const staffLine = Store.data.settings.staff ? `Working as <b style="color:#fff">${esc(Store.data.settings.staff)}</b>` : `<a href="#settings">Set your name</a>`;
+  $("#sideFoot").innerHTML = `${staffLine}<div style="margin-top:10px"><button class="btn ghost sm" style="color:#D3E4E2;border-color:rgba(255,255,255,.25);padding:5px 10px;font-size:12.5px" data-action="logout">Log out (${esc(adminUser || "")})</button></div>`;
+}
+function restoreBackup(file, input) {
+  if (!file) return; const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result); if (!d || !Array.isArray(d.members)) throw new Error("bad");
+      confirmBox("Restore this backup?", `This replaces everything in the app with the ${d.members.length} members in <b>${esc(file.name)}</b>.`, "Restore", () => {
+        Store.data = Object.assign({ members: [], counters: { member: 0, receipt: 0 }, settings: Store.data.settings }, d); persist("bulk.replace", { members: Store.data.members }); state.open.clear(); render(); toast("Backup restored.");
+      });
+    } catch (err) { toast("That file is not a valid backup."); }
+    input.value = "";
+  };
+  r.readAsText(file);
+}
+
+/* -------------------------------- start ----------------------------- */
+window.addEventListener("hashchange", () => { if (!document.body.classList.contains("authed")) return; state.view = location.hash.slice(1) || "dashboard"; render(); window.scrollTo(0, 0); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !dlg.open && document.body.classList.contains("authed")) render(); });
+Store.load();
+state.view = location.hash.slice(1) || "dashboard";
+(function initSession() {
+  const saved = loadSession();
+  if (saved && saved.username && saved.password) { enterApp(saved.username, saved.password); }
+  else { setTimeout(() => { const u = $("#loginUser"); if (u) u.focus(); }, 0); }
+})();
+</script>
+</body>
+</html>
