@@ -1,29 +1,42 @@
-<!--
-=====================================================================
-OKELLO LOGIN PAGE - DROP-IN REPLACEMENT   (2 swaps, nothing else changes)
-All ids/classes your JS uses are kept: #loginScreen #loginForm #loginUser
-#loginPass #loginErr #loginBtn  -> login, session and logout keep working.
-
-SWAP 1 (CSS): in your <style>, delete everything from
-      /* ---------- login ---------- */
-   down to and including the line starting  .login-foot{
-   (KEEP the .msg, .msg-good, .msg-bad lines that follow - Settings uses them)
-   Paste PART A in its place.
-
-SWAP 2 (HTML): replace the whole  <div id="loginScreen" ...> ... </div>
-   block (the one right after <body>, ending before <div class="app">)
-   with PART B.
-=====================================================================
--->
-
-<!-- ===================== PART A : CSS ===================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in · Okello Emergency Quick Loans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root{
+  --paper:#EAEFEC; --surface:#FFFFFF; --soft:#F4F7F6; --ink:#152A2E; --muted:#5B6E72; --line:#D6DFDD;
+  --brand:#0E4F52; --brand-deep:#0A3B3D; --brand-tint:#D3E7E5;
+  --amber:#F2AE1C; --amber-deep:#D89400; --amber-ink:#3A2900; --amber-tint:#FCEBC0; --bad:#C43B30;
+  --font:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 var(--font)}
+h1,h2{font-family:var(--display);margin:0;letter-spacing:-.01em;line-height:1.15}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:4px}
+
+/* base controls (same as the app) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 15px;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn.amber{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.btn.amber:hover{background:var(--amber-deep);border-color:var(--amber-deep)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+input[type=text],input[type=password]{width:100%;padding:12px 13px;font-size:16px;border:1px solid #BFCBC9;border-radius:8px;background:#fff}
+input:focus{outline:3px solid var(--amber);outline-offset:0;border-color:var(--amber-deep)}
+.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fld label{font-weight:600;font-size:13.5px}
+.err{color:var(--bad);font-size:13px;font-weight:600}
+.err:empty{display:none}
+
 /* ---------- login (full page) ---------- */
 #loginScreen{position:fixed;inset:0;z-index:50;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);background:var(--paper);overflow:auto}
-body.authed #loginScreen{display:none}
-body:not(.authed) .app{display:none}
-
-/* left: brand stage with floating shapes */
 .lg-stage{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:48px 36px;color:#fff;
   background:radial-gradient(700px 520px at 20% 15%,#14696C 0%,transparent 62%),radial-gradient(640px 480px at 90% 100%,rgba(242,174,28,.22) 0%,transparent 60%),linear-gradient(160deg,#0E4F52,#0A3B3D 70%)}
 .lg-stage h1{font-size:34px;text-align:center;color:#fff;max-width:14ch}
@@ -32,7 +45,6 @@ body:not(.authed) .app{display:none}
 .lg-logo .ring{transform-origin:100px 100px;animation:lgSpin 60s linear infinite}
 .lg-logo .bolt{transform-origin:100px 100px;animation:lgPulse 3.2s ease-in-out infinite}
 .lg-stage .copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px}
-
 .fl{position:absolute;display:block;pointer-events:none;animation:lgFloat var(--d,14s) ease-in-out infinite;animation-delay:var(--w,0s)}
 .fl.coin{width:var(--s,54px);height:var(--s,54px);border-radius:50%;background:radial-gradient(circle at 32% 28%,#FFE08A 0%,var(--amber) 55%,var(--amber-deep) 100%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.28),0 10px 20px rgba(0,0,0,.25);opacity:.92}
 .fl.coin::after{content:"";position:absolute;inset:22%;border-radius:50%;border:2px solid rgba(58,41,0,.35)}
@@ -43,18 +55,13 @@ body:not(.authed) .app{display:none}
 @keyframes lgBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes lgSpin{to{transform:rotate(360deg)}}
 @keyframes lgPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-
-/* right: form */
-.lg-panel{display:flex;align-items:center;justify-content:center;padding:40px 28px;position:relative}
+.lg-panel{display:flex;align-items:center;justify-content:center;padding:40px 28px;position:relative;overflow:hidden}
 .lg-panel::before{content:"";position:absolute;right:-90px;top:-90px;width:260px;height:260px;border-radius:50%;background:var(--amber-tint);opacity:.7;animation:lgFloat 18s ease-in-out infinite}
 .lg-card{position:relative;width:100%;max-width:390px}
 .lg-card h2{font-size:30px;margin-bottom:6px}
-.lg-card .login-tag{color:var(--muted);margin:0 0 26px;font-size:15px}
+.login-tag{color:var(--muted);margin:0 0 26px;font-size:15px}
 .lg-card form{text-align:left}
 .login-foot{margin:26px 0 0;color:var(--muted);font-size:12.5px}
-.lg-card .fld input{padding:12px 13px;font-size:16px}
-.lg-mobile-logo{display:none}
-
 @media (max-width:860px){
   #loginScreen{grid-template-columns:1fr;grid-template-rows:auto 1fr}
   .lg-stage{padding:26px 20px 30px;gap:12px}
@@ -65,11 +72,10 @@ body:not(.authed) .app{display:none}
 }
 @media (prefers-reduced-motion:reduce){.fl,.lg-logo,.lg-logo .ring,.lg-logo .bolt,.lg-panel::before{animation:none!important}}
 </style>
-
-<!-- ===================== PART B : HTML ===================== -->
-<div id="loginScreen" class="login-wrap">
-  <section class="lg-stage" aria-hidden="false">
-    <!-- floating background shapes -->
+</head>
+<body>
+<div id="loginScreen">
+  <section class="lg-stage">
     <span class="fl coin" style="--s:62px;--d:13s;--w:-2s;left:8%;top:12%"></span>
     <span class="fl coin" style="--s:38px;--d:11s;--w:-6s;left:76%;top:9%"></span>
     <span class="fl coin" style="--s:48px;--d:15s;--w:-4s;left:14%;top:74%"></span>
@@ -81,7 +87,6 @@ body:not(.authed) .app{display:none}
     <span class="fl bar a" style="--s:44px;--d:12s;--w:-7s;left:88%;top:38%"></span>
     <span class="fl bar" style="--s:58px;--d:17s;--w:-10s;left:40%;top:90%"></span>
 
-    <!-- logo: graphics only -->
     <svg class="lg-logo" viewBox="0 0 200 200" role="img" aria-label="Okello Emergency Quick Loans logo">
       <defs>
         <linearGradient id="lgDisc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17787B"/><stop offset="1" stop-color="#0A3B3D"/></linearGradient>
@@ -89,21 +94,19 @@ body:not(.authed) .app{display:none}
         <linearGradient id="lgBolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E4F52"/><stop offset="1" stop-color="#0A3B3D"/></linearGradient>
       </defs>
       <g class="ring">
-        <g id="lgTicks">
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(0 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(27.69 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(55.38 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(83.08 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(110.77 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(138.46 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(166.15 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(193.85 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#F2AE1C" transform="rotate(221.54 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(249.23 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(276.92 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(304.62 100 100)"/>
-          <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(332.31 100 100)"/>
-        </g>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(0 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(27.69 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(55.38 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(83.08 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(110.77 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(138.46 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(166.15 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#7CC3BE" transform="rotate(193.85 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#F2AE1C" transform="rotate(221.54 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(249.23 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(276.92 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(304.62 100 100)"/>
+        <rect x="97.5" y="6" width="5" height="16" rx="2.5" fill="#2D6A6C" transform="rotate(332.31 100 100)"/>
       </g>
       <circle cx="100" cy="100" r="72" fill="url(#lgDisc)"/>
       <circle cx="100" cy="100" r="72" fill="none" stroke="#7CC3BE" stroke-opacity=".45" stroke-width="2"/>
@@ -123,13 +126,43 @@ body:not(.authed) .app{display:none}
     <div class="lg-card">
       <h2>Welcome back</h2>
       <p class="login-tag">Log in to manage loans and record payments.</p>
-      <form id="loginForm" data-form="login" novalidate>
+      <form id="loginForm" novalidate>
         <div class="fld"><label for="loginUser">Username</label><input id="loginUser" name="username" type="text" autocomplete="username" placeholder="Username"></div>
         <div class="fld" style="margin-top:12px"><label for="loginPass">Password</label><input id="loginPass" name="password" type="password" autocomplete="current-password" placeholder="Password"></div>
         <div class="err" id="loginErr" style="margin-top:10px"></div>
-        <button type="submit" class="btn amber" id="loginBtn" style="width:100%;justify-content:center;margin-top:14px;padding:12px 15px;font-size:16px">Log in</button>
+        <button type="submit" class="btn amber" id="loginBtn" style="width:100%;margin-top:14px;padding:12px 15px;font-size:16px">Log in</button>
       </form>
       <p class="login-foot">Okello's Emergency Quick Loans &middot; staff access only</p>
     </div>
   </section>
 </div>
+
+<script>
+/* Set APP_URL to the file name (or full link) of your main app page. */
+const API_URL = "https://script.google.com/macros/s/AKfycbxmZ8KvSgYR8o9jPeTvibVhEiTkq5KPFGlhLZ5wq1kFXZ4G8Bzt0LrIh6hCFzbeVxyp/exec";
+const APP_URL = "index.html";
+const SESSION_KEY = "okello_admin_session"; /* same key the app reads */
+
+const $ = s => document.querySelector(s);
+try { const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); if (s && s.username && s.password) location.replace(APP_URL); } catch (e) {}
+
+$("#loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, btn = $("#loginBtn"), err = $("#loginErr");
+  const username = f.elements.username.value.trim(), password = f.elements.password.value;
+  if (!username || !password) { err.textContent = "Enter your username and password."; return; }
+  btn.disabled = true; btn.textContent = "Checking…"; err.textContent = "";
+  try {
+    const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "login", payload: { username, password } }) });
+    const data = JSON.parse(await res.text());
+    if (data && data.success) {
+      try { localStorage.setItem(SESSION_KEY, JSON.stringify({ username, password })); } catch (x) {}
+      location.replace(APP_URL);
+    } else err.textContent = (data && data.error) || "Incorrect username or password.";
+  } catch (x) { err.textContent = "Couldn't reach the server: " + x.message; }
+  finally { btn.disabled = false; btn.textContent = "Log in"; }
+});
+setTimeout(() => $("#loginUser").focus(), 0);
+</script>
+</body>
+</html>
